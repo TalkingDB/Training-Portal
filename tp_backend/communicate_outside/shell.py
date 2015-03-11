@@ -7,7 +7,7 @@ import time
 import os
 from subprocess import call, Popen
 
-CP_path = os.path.expanduser('~/Smarter.Codes/CommandNet_Processor/src/main.py')
+CP_path = os.path.expanduser('~/Smarter.Codes/src/CommandNet_Processor/src/main.py')
 
 def initializeCommandNetProcessor_to_ComputeHighPriorityTrainingQuestions():
     p = Popen(['python', CP_path, 'ner', '5006', 'compute_high_priority_training_questions'])
