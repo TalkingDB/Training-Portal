@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}Progress{% endblock %}
+{% block content %}
+{% load user_tag %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default" id="total-progress">
+            <div class="panel-heading">
+                <h3 class="text-center">Total Progress</h3>
+                <div class="form-group">
+                    Trainers :
+                    {% for user in users %}
+                        <label class="total-progress">
+                            <input name="trainers[]" type="checkbox" value="{{ user.id }}" checked>{{ user|capfirst }}
+                        </label>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="panel-body">
+                <i class="loader pull-right"><img src="http://jalbum.net/en/resources/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/indicator.gif"></i>
+                <div class="progress">
+
+                    <div class="progress-bar progress-bar-success total-progress-bar" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: {{ progress.total }}%">
+                        {{ progress.total }}%
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% for key, value in progress.items %}
+    {% if key != 'total' %}
+        {% if value != '0.00' %}
+            <div class="row trainer-progress">
+                <div class="col-md-12">
+                    <div class="panel panel-default ">
+                        <div class="panel-heading">
+                            <h3 class="text-center"> {{ key|getusername }}</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: {{ value }}%">
+                                {{ value }}%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {%endif%}
+    {% endif %}
+{% endfor %}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="well well-sm">These users have not started with the training yet :
+            {% for key, value in progress.items %}
+                {% if value == '0.00' %}
+                    <span class="label label-warning">{{ key|getusername }}</span>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block jquery %}
+<script>
+    $(document).ready(function(e){
+        var ajx;
+        $("#total-progress .form-group").on("change", function(){
+            $(".loader").css("visibility", "visible");
+            checked = [];
+            if ($.active > 0){ ajx.abort(); }
+            $('input[type=checkbox]').each(function () {
+                if (this.checked){ checked.push($(this).val());}
+            });
+            ajx = $.ajax({
+              type: "POST",
+              url: '/progress',
+              dataType: 'json',
+              data: {'checked': checked},
+            }).success(function(data){
+                $(".loader").css("visibility", "hidden");
+                $(".total-progress-bar").css("width", data['total-progress'] +'%' );
+                $(".total-progress-bar").text(data['total-progress'] +'%' );
+            }).fail(function(){
+                alert("failed");
+            });
+        });
+});
+</script>
+{% endblock %}

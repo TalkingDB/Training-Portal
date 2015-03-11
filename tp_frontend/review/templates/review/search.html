@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Progress{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h3>Search Results:</h3>
+        {% if result_text %}
+            {% for result in result_text %}
+                <p><a href="/review/{{ result.name}}" >{{ result.name }}</a></p>
+            {% endfor %}
+        {% endif %}
+        {% if result_entity %}
+            {% for result in result_entity %}
+                <p><a href="/review/{{ result.name}}" >{{ result.name }}</a></p>
+            {% endfor %}
+        {% endif %}
+    </div>
+</div>
+
+{% endblock content %}

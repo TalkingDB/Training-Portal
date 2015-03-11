@@ -1,0 +1,56 @@
+body {
+    padding-top: 70px;
+    padding-bottom: 30px;
+}
+
+.synonym_checkbox{
+    border-bottom: 1px solid #F5F5F5;
+    padding-top: 5px;
+}
+
+.synonym_checkbox:hover{
+    cursor: pointer;
+    border-bottom: 1px solid #DFDFDF;
+    background-color: #F5F5F5;
+}
+.loader{
+    visibility: hidden;
+}
+
+#wikki-text{
+height: 450px;
+overflow: hidden;
+}
+
+
+.panel-heading .total-progress:not(:last-child){
+    border-right: 1px dotted dimgrey;
+}
+
+.panel-heading .total-progress{
+    padding-right: 10px;
+    padding-left: 10px;
+}
+
+#total-progress .form-group{
+    margin-bottom: 0px;
+}
+#total-progress h3{
+    margin-top: 0;
+    border-bottom: 1px dotted rgb(213, 213, 213);
+    margin-bottom: 25px;
+}
+#total-progress .loader{
+    margin-top: 8px !important;
+}
+.progress{
+    margin-top:10px;
+    margin-bottom: 10px;
+}
+#total-progress{
+    margin-top: 8px;
+}
+
+.well-sm label{
+    margin-right: 5px;
+}

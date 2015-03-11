@@ -1,0 +1,32 @@
+from django.conf.urls import patterns, include, url
+
+from django.contrib import admin
+admin.autodiscover()
+
+urlpatterns = patterns('',
+    # Examples:
+    # url(r'^$', 'TrainingPortal.views.home', name='home'),
+    # url(r'^blog/', include('blog.urls')),
+
+    url(r'^admin/', include(admin.site.urls)),
+    url(r'^login/$', 'django.contrib.auth.views.login'),
+    url(r'^logout/', 'django.contrib.auth.views.logout',{
+        'next_page': '/',
+    }),
+    url(r'^$', 'review.user.home'),
+    url(r'^review/$', 'review.views.index'),
+    url(r'^review/save/surface_text/(?P<entity>.*)$', 'review.views.save_surface_text'),
+    url(r'^review/save/(?P<entity>.*)$', 'review.views.save'),
+    url(r'^review/skip', 'review.views.skip'),
+   # url(r'^progress-stat/$', 'review.user.progress'),
+    url(r'^review/(?P<resource>.*)$', 'review.views.index'),
+    url(r'^progress', 'review.progress.progress'),
+    url(r'^report/download', 'review.download.download'),
+    url(r'^report/(?P<id>[-\d]+)/download/$', 'review.download.user_report_download'),
+    url(r'^search/', 'review.search.search'),
+    url(r'^review/delete/(?P<id>[-\d]+)$', 'review.views.delete'),
+    url(r'^generate-results/$', 'review.user.retrain'),
+    
+    url(r'^bot/$', 'bot.views.bot'),
+    url(r'^bot/step/(?P<process>[-\w]+)$', 'bot.views.bot'),
+)

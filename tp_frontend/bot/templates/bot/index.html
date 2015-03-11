@@ -1,0 +1,136 @@
+{% extends "layout.html" %}
+{% block title %}Start Processes{% endblock %}
+
+{% block jquery %}
+    <script type="text/javascript">
+	    var inter;
+	    var refresh = false;
+	    $(document).ready(function(){
+	    	check_status('check');
+	        $("#start_process").click(function(e){
+	        	refresh = true;
+	        	check_status('one');
+	        });
+	    });
+	    
+	    function refresh_data(){
+	    	inter = setInterval(function(){
+	            check_status('check'); // this will run after every 5 seconds
+	        }, 5000);
+	    }
+	    
+	    function check_status(step){
+	    	$.getJSON( "step/"+step, function(data) {
+	    		$('.step').hide();
+	    		$('#step'+data.data.step).show();
+	    		
+	    		if (refresh){
+	    			refresh_data();
+	    			refresh = false;
+	    		}
+	    		
+	    	    if (typeof(data.data.started) != 'undefined'){
+	    	    	$('#start_process').hide();
+	    	    	var bar = $('#progress_bar .progress-bar');
+	    	    	bar.attr('aria-valuenow', data.data.percentage_done);
+	    	    	bar.css('width', data.data.percentage_done+"%");
+	    	    	$("#remaining").text( data.data.remaining_time);
+	    	    	$('#progress_bar').show();
+	    	    	bar.show();
+	    	    } else {
+	    	    	$('#start_process').show();
+	    	    	$('#step'+data.data.step).show();
+	    	    	$('#progress_bar').hide();
+	    	    	clearInterval(inter);
+	    	    }
+	        });
+	    }
+    
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div class="row step" id="step1">
+        <div class="col-md-12">
+		    <h2>
+		        {{"step 1: Find Synonyms"|title}}
+		        <button id="start_process" class="btn btn-success pull-right">Start Bot</button>
+		    </h2>
+		    <p>
+			    Labels: 
+			    <mark>foaf:name</mark>, 
+			    <mark>rdfs:label</mark>, 
+			    <mark>dbprop:name</mark>,  
+			    <mark>dbpedia-owl:alias</mark>, 
+			    <mark>dbpprop:alternateName</mark>
+		    </p>
+		    
+		    <p>
+		        Wiki Redirects: 
+		        <mark>dbpedia-owl:wikiPageRedirects</mark>
+		    </p>
+		    
+		    <p>
+		        Wiki Disambiguates: 
+		        <mark>dbpedia-owl:wikiPageDisambiguates</mark>
+		    </p>
+		    
+		    <p>
+		        Wikipedia Bold: Gather all bold tags from <mark>Wikipedia Abstracts</mark>
+		    </p>
+	    </div>
+    </div>
+    
+    <div class="row step" id="step2">
+        <div class="col-md-12">
+            <h2>
+                {{"step 2: CommandNet Tagging (Delivery.com)"|title}}
+            </h2>
+            <p>
+                Items from the catalog and user inputs will be tagged by CommandNet Tokens
+            </p>
+        </div>
+    </div>
+    
+    <div class="row step" id="step3">
+        <div class="col-md-12">
+            <h2>
+                {{"step 3: CommandNet Tagging (MTurk)"|title}}
+            </h2>
+            <p>
+                Items from the catalog and user inputs will be tagged by CommandNet Tokens
+            </p>
+        </div>
+    </div>
+    
+    <div class="row step" id="step4">
+        <div class="col-md-12">
+            <h2>
+                {{"step 4: Entity Frequency Calculation"|title}}
+            </h2>
+            <p>
+                All the entities from DBPedia/Wikipedia will be sent for frequency calculation.
+            </p>
+        </div>
+    </div>
+    
+	<div id="progress_bar" class="row" style="margin-top:50px;">
+		<div class="col-md-12">
+			<div class="progress">
+				<div class="progress-bar progress-bar-success progress-bar-striped"
+					role="progressbar" 
+					aria-valuenow="0" 
+					aria-valuemin="0"
+					aria-valuemax="100" 
+					style="width: 0%">
+					<span class="sr-only">0% Complete (success)</span>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4 col-md-offset-4">
+		      <p style="text-align: center;">
+		      <strong id="remaining">0</strong> minute(s) remaining...
+		      </p>
+		</div>
+	</div>
+{% endblock %}
