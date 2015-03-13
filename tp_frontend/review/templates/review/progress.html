@@ -7,7 +7,7 @@
     <div class="col-md-12">
         <div class="panel panel-default" id="total-progress">
             <div class="panel-heading">
-                <h3 class="text-center">Total Progress</h3>
+                <h3 class="text-center">Total Progress<span class="pull-right" style="font-size: 14px;"><a href="/report/download">Download csv</a> </span></h3>
                 <div class="form-group">
                     Trainers :
                     {% for user in users %}
@@ -37,7 +37,7 @@
                 <div class="col-md-12">
                     <div class="panel panel-default ">
                         <div class="panel-heading">
-                            <h3 class="text-center"> {{ key|getusername }}</h3>
+                            <h3 class="text-center"> {{ key|getusername }}<span class="pull-right" style="font-size: 14px;"><a href="report/{{key}}/download">Download csv</a> </span></h3>
                         </div>
                         <div class="panel-body">
                             <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: {{ value }}%">

@@ -47,10 +47,9 @@ def user_report_download(request, id):
     if not request.user.is_staff or not request.user.is_superuser:
         return Http404
     user = User.objects.get(id=id)
-
     questions = entity_collection.find({"trainers": {"$in": [user.id]}})
     response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="somefilename.csv"'
+    response['Content-Disposition'] = 'attachment; filename="'+ str(user.username)+ "_report" +'.csv"'
     writer = csv.writer(response)
     writer.writerow(['question', 'status', 'approved', 'disapproved'])
     data_list = []
@@ -72,7 +71,7 @@ def user_report_download(request, id):
                 approved_synonyms.append(synonym[find])
             if 'disapproved_by_trainer' in synonym and user.id in synonym['disapproved_by_trainer']:
                 disapproved_synonyms.append(synonym[find])
-        if len(approved_synonyms) > 0 or len(disapproved_synonyms)>0:
+        if len(approved_synonyms) > 0 or len(disapproved_synonyms) > 0:
             if len(approved_synonyms) > len(disapproved_synonyms):
                 for i in range(len(approved_synonyms)):
                     csv_list.append([data["question"], "answered", "", ""])
@@ -90,8 +89,8 @@ def user_report_download(request, id):
             data_list.append(data)
 
     for data in data_list:
-        writer.writerow(data)
-    # response = HttpResponse(data())
-    # response["Content-Disposition"] = "attachment; filename="+str(user.username)+".csv"
+        try:
+            writer.writerow(data)
+        except Exception as e:
+            print e
     return response
-    # return HttpResponse("hello")
