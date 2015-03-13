@@ -67,3 +67,11 @@ overflow: hidden;
     background-color:white;
     color:black;
 }
+.main-link{
+    color: #333;
+}
+
+.main-link:hover{
+    color: #337ab7;
+     text-decoration: none;
+}
