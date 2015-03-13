@@ -66,12 +66,13 @@
   </table>
 
             <div class="panel-footer" style="height:45px;">
-
+            <span id="goto">
+                <input type="text"  name="page_number" size="2"> <button class="btn btn-sm btn-default" style="margin-left:5px; padding-bottom:4px;padding-top:4px;">Go To Page</button>
+            </span>
                 <span class="step-links pull-right">
         {% if questions.has_previous %}
             <a href="?page={{ questions.previous_page_number }}"><span class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true" style="font-size:18px; top:4px; margin-right:4px;"></span></a>
         {% endif %}
-
         <span class="current">
             Page {{ questions.number }} of {{ questions.paginator.num_pages }}
         </span>
@@ -97,6 +98,10 @@
             });
         });
 
+        $("#goto button").on('click', function(){
+            var goto_page = $("#goto input").val();
+            window.location.href = "?page="+ goto_page;
         });
+    });
 </script>
 {% endblock %}

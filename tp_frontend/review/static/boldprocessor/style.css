@@ -54,3 +54,16 @@ overflow: hidden;
 .well-sm label{
     margin-right: 5px;
 }
+
+
+#progress-label{
+    padding-bottom: 10px;
+}
+
+#progress-label .label{
+    font-size:11px;
+    border-radius:3px;
+    border: 1px solid rgb(181, 181, 181);
+    background-color:white;
+    color:black;
+}

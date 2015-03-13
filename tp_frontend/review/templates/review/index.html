@@ -4,10 +4,17 @@
 {% block content %}
 {% load user_tag %}
 {% if not error %}
-<div class="well" style="padding:0px">
-<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: {{ progress.total }}%">
-    {{ progress.total }}%
-</div>
+<div class="row" >
+    <div class="col-md-12" id="progress-label">
+        <span style="" class="label label-default">Progress</span>
+    </div>
+    <div class="col-md-12">
+        <div class="well" style="padding:0px">
+            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: {{ progress.total }}%">
+                {{ progress.total }}%
+            </div>
+        </div>
+    </div>
 </div>
 {% if concept_type == "entity_url" %}
 <div ><span style="font-size:11px;border-radius:0;background-color:#286090;" class="label label-default">CONCEPT</span> </div>
