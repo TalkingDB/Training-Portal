@@ -27,7 +27,10 @@ def download(request, user_id=None):
         csvwriter = csv.writer(csvfile)
         csvwriter.writerow(["frequency","question","Trainers"])
         for data in mongodata:
-            csvwriter.writerow([data['frequency'],data['question'],get_string(data['trainers'], user_dict)])
+            question = data['question']
+            if '>' in question:
+                question = data['question'].split('>')[1].replace("_", " ").replace("-", " ")
+            csvwriter.writerow([question,get_string(data['trainers'], user_dict)])
         yield csvfile.getvalue()
 
     response = HttpResponse(data())
@@ -57,34 +60,39 @@ def user_report_download(request, id):
         csv_list = []
         approved_synonyms = []
         disapproved_synonyms = []
-        skipped_synonyms = []
         type = "surface_text"
         find = "entity_url"
+        question = data['question']
         if '>' in data['question']:
             type = "entity_url"
             find = "surface_text"
+            question = data['question'].split('>')[1].replace("_", " ").replace("-", " ")
         synonyms = synonym_collection.find({
              type: data['question']
          }, {"mentioned_in": 0, "how_this_record": 0, "seed_category":0, "frequency": 0, "intended_trainer":0})
         for synonym in synonyms:
+            if '>' in synonym[find]:
+                text = synonym[find].split('>')[1].replace("_", " ").replace("-", " ")
+            else:
+                text = synonym[find]
             if 'approved_by_trainer' in synonym and user.id in synonym['approved_by_trainer']:
-                approved_synonyms.append(synonym[find])
+                approved_synonyms.append(text)
             if 'disapproved_by_trainer' in synonym and user.id in synonym['disapproved_by_trainer']:
-                disapproved_synonyms.append(synonym[find])
+                disapproved_synonyms.append(text)
         if len(approved_synonyms) > 0 or len(disapproved_synonyms) > 0:
             if len(approved_synonyms) > len(disapproved_synonyms):
                 for i in range(len(approved_synonyms)):
-                    csv_list.append([data["question"], "answered", "", ""])
+                    csv_list.append([question, "answered", "", ""])
             else:
                 for i in range(len(disapproved_synonyms)):
-                    csv_list.append([data["question"], "answered", "", ""])
+                    csv_list.append([question, "answered", "", ""])
             for i in range(len(approved_synonyms)):
                 csv_list[i][2] = approved_synonyms[i]
 
             for i in range(len(disapproved_synonyms)):
                 csv_list[i][3] = disapproved_synonyms[i]
         else:
-            csv_list.append([data["question"], "skipped", "", ""])
+            csv_list.append([question, "skipped", "", ""])
         for data in csv_list:
             data_list.append(data)
 
