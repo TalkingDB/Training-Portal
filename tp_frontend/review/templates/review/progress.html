@@ -21,7 +21,7 @@
                 <i class="loader pull-right"><img src="http://jalbum.net/en/resources/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/indicator.gif"></i>
                 <div class="progress">
 
-                    <div class="progress-bar progress-bar-success total-progress-bar" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: {{ progress.total }}%">
+                    <div class="progress-bar progress-bar-success total-progress-bar" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: {{ progress.total }}%; color:black;">
                         {{ progress.total }}%
                     </div>
                 </div>
@@ -40,8 +40,10 @@
                             <h3 class="text-center"> {{ key|getusername }}<span class="pull-right" style="font-size: 14px;"><a href="report/{{key}}/download">Download csv</a> </span></h3>
                         </div>
                         <div class="panel-body">
-                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: {{ value }}%">
-                                {{ value }}%
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: {{ value }}%;color:black;">
+                                    {{ value }}%
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -56,7 +58,7 @@
         <div class="well well-sm">These users have not started with the training yet :
             {% for key, value in progress.items %}
                 {% if value == '0.00' %}
-                    <span class="label label-warning">{{ key|getusername }}</span>
+                    <span class="label label-warning" style="background-color: {{ key|get_colourcode }}">{{ key|getusername }}</span>
                 {% endif %}
             {% endfor %}
         </div>
