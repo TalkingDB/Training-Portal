@@ -67,7 +67,7 @@
 
             <div class="panel-footer" style="height:45px;">
             <span id="goto">
-                <input type="text"  name="page_number" size="2"> <button class="btn btn-sm btn-default" style="margin-left:5px; padding-bottom:4px;padding-top:4px;">Go To Page</button>
+                <input type="text"  name="page_number" size="2" id="pagination_textbox"> <button class="btn btn-sm btn-default" style="margin-left:5px; padding-bottom:4px;padding-top:4px;">Go To Page</button>
             </span>
                 <span class="step-links pull-right">
         {% if questions.has_previous %}
@@ -101,6 +101,12 @@
         $("#goto button").on('click', function(){
             var goto_page = $("#goto input").val();
             window.location.href = "?page="+ goto_page;
+        });
+        $('#pagination_textbox').on("keypress", function(e) {
+            if (e.keyCode == 13) {
+                var goto_page = $(this).val();
+                window.location.href = "?page="+ goto_page;
+            }
         });
     });
 </script>
