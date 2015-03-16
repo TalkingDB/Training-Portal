@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.views.decorators.csrf import csrf_exempt
@@ -9,6 +9,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import questions_n_answers as question_list
 from progress import get_progress
 from retrain import retraining
+import json
 
 import os
 from ConfigParser import RawConfigParser
@@ -57,5 +58,8 @@ def retrain(request):
     """
     if request.method == "GET":
         raise Http404
-    retraining()
-    return render(request, 'review/profile.html')
+    result = retraining()
+    return HttpResponse(json.dumps(result))
+
+
+

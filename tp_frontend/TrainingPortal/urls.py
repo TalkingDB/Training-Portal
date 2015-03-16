@@ -24,6 +24,7 @@ urlpatterns = patterns('',
     url(r'^report/download', 'review.download.download'),
     url(r'^report/(?P<id>[-\d]+)/download/$', 'review.download.user_report_download'),
     url(r'^search/', 'review.search.search'),
+    url(r'^entity/details/(?P<query_string>.*)/(?P<entity_id>.*)$', 'review.views.get_details_by_id'),
     url(r'^review/delete/(?P<id>[-\d]+)$', 'review.views.delete'),
     url(r'^generate-results/$', 'review.user.retrain'),
     

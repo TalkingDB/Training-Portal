@@ -268,3 +268,20 @@ def delete(request, id):
         entity.save()
         
     return redirect('/review')
+
+@csrf_exempt
+@login_required
+def get_details_by_id(request, query_string, entity_id):
+    """
+    This method will receive id of entity and query string.
+    if query_string and entity corresponding to id exists,
+    Return that specific query data
+
+    if query string is equal to full data . Return object of that entity
+    """
+    entityModel = em.EntityModel(db, collection)
+    print "coming inside"
+    entity = entityModel.select_one({"_id":ObjectId(entity_id)})
+    if entity and entity[query_string]:
+        return HttpResponse(entity[query_string].replace('_', ' '))
+    return HttpResponse("Not able to find source")

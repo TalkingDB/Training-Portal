@@ -53,7 +53,7 @@
       {% for ques in questions %}
       <tr>
           <td class="text-muted">
-              {{ ques.question|removeprefix }} ({{ques.frequency}})</td>
+             <a href="/review/{{ ques.question }}" style="text-decoration: none;">{{ ques.question|removeprefix }}</a> ({{ques.frequency}})</td>
             <td>
 
                 {% for trainer in ques.trainers %}
