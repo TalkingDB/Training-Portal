@@ -70,21 +70,22 @@
   </table>
 
             <div class="panel-footer" style="height:45px;">
-            <span id="goto">
+                <span class="step-links">
+                    {% if questions.has_previous %}
+                        <a href="?page={{ questions.previous_page_number }}"><span class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true" style="font-size:18px; top:4px; margin-right:4px;"></span></a>
+                    {% endif %}
+                    <span class="current">
+                        Page {{ questions.number }} of {{ questions.paginator.num_pages }}
+                    </span>
+
+                    {% if questions.has_next %}
+                        <a href="?page={{ questions.next_page_number }}"><span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true" style="font-size:18px; top:4px; margin-left:4px;"></span></a>
+                    {% endif %}
+                </span>
+                <span id="goto">
                 <input type="text"  name="page_number" size="2" id="pagination_textbox"> <button class="btn btn-sm btn-default" style="margin-left:5px; padding-bottom:4px;padding-top:4px;">Go To Page</button>
             </span>
-                <span class="step-links pull-right">
-        {% if questions.has_previous %}
-            <a href="?page={{ questions.previous_page_number }}"><span class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true" style="font-size:18px; top:4px; margin-right:4px;"></span></a>
-        {% endif %}
-        <span class="current">
-            Page {{ questions.number }} of {{ questions.paginator.num_pages }}
-        </span>
 
-        {% if questions.has_next %}
-            <a href="?page={{ questions.next_page_number }}"><span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true" style="font-size:18px; top:4px; margin-left:4px;"></span></a>
-        {% endif %}
-    </span>
 </div>
 </div>
 
