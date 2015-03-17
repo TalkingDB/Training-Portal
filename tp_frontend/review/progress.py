@@ -25,10 +25,14 @@ def progress(request):
 
 def get_progress(total_count, trainers):
     """
+    Calculate progress of list of trainers and total number of questions.
     """
+    # dict to add key = trainers, value = progress in decimals
     progress_dict = {}
+
     total = 0
     for trainer in trainers:
+        # get answered entities of a trainer
         answered_count = questions.get_user_answered_count(int(trainer))
         total = total+answered_count
         progress_dict[trainer] = calculate_percentage(answered_count, total_count)
@@ -39,6 +43,12 @@ def get_progress(total_count, trainers):
 
 
 def calculate_percentage(answered, total):
+    """
+    Calculate percentage according to answered questions and total number of questions
+
+    return type: decimal
+    """
+
     try:
         percentage = (float(answered)/float(total)) * 100
     except:
