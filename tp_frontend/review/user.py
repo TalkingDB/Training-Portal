@@ -16,6 +16,7 @@ from ConfigParser import RawConfigParser
 config = RawConfigParser()
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 config.read(BASE_DIR+'/config.ini')
+
 mongoUrl =  config.get('mongo', 'MONGO_URL')
 mongoPort = 27017
 mongoDb = "noisy_NER"
@@ -24,13 +25,16 @@ client = MongoClient(mongoUrl, mongoPort)
 db = client[mongoDb]
 questionModel = em.EntityModel(db, 'questions')
 
-
+root_dir_path = os.path.expanduser("~/Smarter.Codes/src")
 
 @login_required()
 def home(request):
     """
     """
     to_send = {}
+    to_send['retraining_progress'] = False
+    if os.path.isfile(root_dir_path+'/progress.txt'):
+        to_send['retraining_progress'] = True
     if request.user.is_staff:
         questions = list(questionModel.select_all())
         paginator = Paginator(questions, 20) # Show 20  per page
@@ -58,8 +62,20 @@ def retrain(request):
     """
     if request.method == "GET":
         raise Http404
-    result = retraining()
+    if os.path.isfile(root_dir_path+'progress.txt'):
+        return {'process': "Process already running."}
+    else:
+        open('progress.txt', 'a').close()
+        result = retraining()
     return HttpResponse(json.dumps(result))
 
+@login_required()
+@csrf_exempt
+def check_retraining_progress(request):
+    """
+    """
+    if os.path.isfile(root_dir_path+'/progress.txt'):
+        return HttpResponse("true")
 
+    return HttpResponse("false")
 

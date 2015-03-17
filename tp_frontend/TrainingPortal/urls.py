@@ -27,6 +27,7 @@ urlpatterns = patterns('',
     url(r'^entity/details/(?P<query_string>.*)/(?P<entity_id>.*)$', 'review.views.get_details_by_id'),
     url(r'^review/delete/(?P<id>[-\d]+)$', 'review.views.delete'),
     url(r'^generate-results/$', 'review.user.retrain'),
+    url(r'^generate-results/progress', 'review.user.check_retraining_progress'),
     
     url(r'^bot/$', 'bot.views.bot'),
     url(r'^bot/step/(?P<process>[-\w]+)$', 'bot.views.bot'),

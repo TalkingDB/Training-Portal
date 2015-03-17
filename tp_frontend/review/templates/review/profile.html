@@ -16,7 +16,11 @@
     <div class="col-md-8"><h4>Total Progress Of Training Portal</h4></div>
     {% if user.is_staff %}
     <div class="col-md-4" id="generate_result_div">
-        <button class="btn btn-primary btn-block btn-large" id="generate-json">Generate Results</button>
+        {% if retraining_progress == True %}
+        <h3>Retraining in progress &nbsp; &nbsp;<img src="http://jalbum.net/en/resources/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/indicator.gif"></h3>
+        {% else %}
+        <button class="btn btn-primary btn-block btn-large" id="retrain-btn">Start Retraining</button>
+        {% endif %}
     </div>
     {% endif %}
     </div>
@@ -89,9 +93,10 @@
 {% block jquery %}
 <script>
     $(document).ready(function(){
-        $("#generate_result_div button").on("click", function(){
+        $("#retrain-btn").on("click", function(){
+            $('#generate_result_div').html('<h3>Retraining in progress &nbsp; &nbsp;<img src="http://jalbum.net/en/resources/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/indicator.gif"></h3>');
             $.post( "/generate-results/", function() {
-            $("#generate_result_div").html("Generating Results.....");
+            retraining_process();
             })
             .fail(function() {
                 $("#message").html('<div class="alert alert-danger text-center" role="alert">Error in Generating Results</div>');
@@ -108,6 +113,28 @@
                 window.location.href = "?page="+ goto_page;
             }
         });
+    {% if retraining_progress == True %}
+        retraining_process();
+    {% endif %}
+        function retraining_process(){
+            var timeout = setTimeout(retraining_process, 5000);
+             $.ajax({
+                  type: "get",
+                  url: "/generate-results/progress",
+                }).success(function(data){
+                    if (data === "true"){
+                        $('#generate_result_div').html('<h3>Retraining in progress &nbsp; &nbsp;<img src="http://jalbum.net/en/resources/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/indicator.gif"></h3>');
+                    }else{
+                        $("#message").html('<div class="alert alert-success text-center" role="alert">Retraining Completed</div>');
+                        $('#generate_result_div').html('<button class="btn btn-primary btn-block btn-large" id="retrain-btn">Start Retraining</button>')
+                        clearTimeout(timeout);
+                    }
+                }).fail(function(){
+                    console.log('source data not found ')
+             });
+
+
+         }
     });
 </script>
 {% endblock %}
