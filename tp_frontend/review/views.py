@@ -170,7 +170,7 @@ def save(request, entity):
                 'frequency': question[1],
                 'trainers': [request.user.id]
             }
-            questionModel.insert(ques)
+            questionModel.insertQuestion(ques)
 
     return redirect('/review')
 
@@ -225,7 +225,7 @@ def save_surface_text(request, entity):
                 'frequency': question[1],
                 'trainers': request.user.id
             }
-            questionModel.insert(ques)
+            questionModel.insertQuestion(ques)
 
     return redirect('/review')
 
