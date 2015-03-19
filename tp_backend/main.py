@@ -29,7 +29,7 @@ set intended_trainer=$Project_trainer
 import re
 
 # Open file containing data of commonsense linguist and add surface text to a list
-with open("mongoDumpOfCommonSenseTraining.txt", "r") as f:
+with open("data/mongoDumpOfCommonSenseTraining.txt", "r") as f:
     linguist_data = re.findall('"surface_text"\s:\s"(.*?)"', f.read())
 
 # replace lines having same surface text as commonsense linguist
