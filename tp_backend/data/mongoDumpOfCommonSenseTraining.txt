@@ -1,0 +1,129 @@
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "bottle", "language" : "en", "entity_url" : "DBPedia>Bottle" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "pitcher", "language" : "en", "entity_url" : "DBPedia>Pitcher_(container)" }
+{ "surface_text" : "can", "entity_url" : "DBPedia>Beverage_can", "language" : "en", "intended_trainer" : "commonsense_linguist" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "and", "language" : "en", "entity_url" : "DBPedia>Conjunction_(grammar)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "&", "language" : "en", "entity_url" : "DBPedia>Conjunction_(grammar)" }
+{ "surface_text" : "2", "entity_url" : "DBPedia>2_(number)", "language" : "en", "intended_trainer" : "commonsense_linguist" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "20", "language" : "en", "entity_url" : "DBPedia>20_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "with", "entity_url" : "CommonSense>With" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "w/", "entity_url" : "CommonSense>With" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "along with", "entity_url" : "CommonSense>With" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "small", "entity_url" : "Wikitionary>Small" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "medium", "entity_url" : "Wikitionary>Medium" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "large", "entity_url" : "Wikitionary>Large" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "big", "entity_url" : "Wikitionary>Large" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "1", "entity_url" : "DBPedia>1_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "3", "entity_url" : "DBPedia>3_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "4", "entity_url" : "DBPedia>4_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "5", "entity_url" : "DBPedia>5_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "6", "entity_url" : "DBPedia>6_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "7", "entity_url" : "DBPedia>7_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "8", "entity_url" : "DBPedia>8_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "9", "entity_url" : "DBPedia>9_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "10", "entity_url" : "DBPedia>10_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "11", "entity_url" : "DBPedia>11_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "12", "entity_url" : "DBPedia>12_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "13", "entity_url" : "DBPedia>13_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "14", "entity_url" : "DBPedia>14_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "15", "entity_url" : "DBPedia>15_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "16", "entity_url" : "DBPedia>16_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "17", "entity_url" : "DBPedia>17_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "18", "entity_url" : "DBPedia>18_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "19", "entity_url" : "DBPedia>19_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "21", "entity_url" : "DBPedia>21_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "22", "entity_url" : "DBPedia>22_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "23", "entity_url" : "DBPedia>23_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "24", "entity_url" : "DBPedia>24_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "25", "entity_url" : "DBPedia>25_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "26", "entity_url" : "DBPedia>26_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "27", "entity_url" : "DBPedia>27_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "28", "entity_url" : "DBPedia>28_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "35", "entity_url" : "DBPedia>35_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "37", "entity_url" : "DBPedia>37_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "39", "entity_url" : "DBPedia>39_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "29", "entity_url" : "DBPedia>29_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "30", "entity_url" : "DBPedia>30_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "31", "entity_url" : "DBPedia>31_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "32", "entity_url" : "DBPedia>32_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "33", "entity_url" : "DBPedia>33_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "34", "entity_url" : "DBPedia>34_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "36", "entity_url" : "DBPedia>36_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "38", "entity_url" : "DBPedia>38_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "40", "entity_url" : "DBPedia>40_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "one", "entity_url" : "DBPedia>1_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "two", "entity_url" : "DBPedia>2_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "three", "entity_url" : "DBPedia>3_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "four", "entity_url" : "DBPedia>4_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "five", "entity_url" : "DBPedia>5_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "six", "entity_url" : "DBPedia>6_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "seven", "entity_url" : "DBPedia>7_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "eight", "entity_url" : "DBPedia>8_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "nine", "entity_url" : "DBPedia>9_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "ten", "entity_url" : "DBPedia>10_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "eleven", "entity_url" : "DBPedia>11_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "twelve", "entity_url" : "DBPedia>12_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "thirteen", "entity_url" : "DBPedia>13_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "fourteen", "entity_url" : "DBPedia>14_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "fifteen", "entity_url" : "DBPedia>15_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "sixteen", "entity_url" : "DBPedia>16_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "seventeen", "entity_url" : "DBPedia>17_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "eighteen", "entity_url" : "DBPedia>18_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "ninteen", "entity_url" : "DBPedia>19_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "twenty", "entity_url" : "DBPedia>20_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "twenty one", "entity_url" : "DBPedia>21_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "twenty two", "entity_url" : "DBPedia>22_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "twenty three", "entity_url" : "DBPedia>23_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "twenty four", "entity_url" : "DBPedia>24_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "twenty five", "entity_url" : "DBPedia>25_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "twenty six", "entity_url" : "DBPedia>26_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "twenty seven", "entity_url" : "DBPedia>27_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "twenty eight", "entity_url" : "DBPedia>28_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "twenty nine", "entity_url" : "DBPedia>29_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "thirty", "entity_url" : "DBPedia>30_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "thirty one", "entity_url" : "DBPedia>31_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "thirty two", "entity_url" : "DBPedia>32_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "thirty three", "entity_url" : "DBPedia>33_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "thirty four", "entity_url" : "DBPedia>34_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "thirty five", "entity_url" : "DBPedia>35_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "thirty six", "entity_url" : "DBPedia>36_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "thirty seven", "entity_url" : "DBPedia>37_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "thirty eight", "entity_url" : "DBPedia>38_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "thirty nine", "entity_url" : "DBPedia>39_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "fourty", "entity_url" : "DBPedia>40_(number)" }
+{ "intended_trainer" : "commonsense_linguist", "entity_url" : "DBPedia>1_(number)", "surface_text" : "a" }
+{ "intended_trainer" : "commonsense_linguist", "entity_url" : "DBPedia>1_(number)", "surface_text" : "an" }
+{ "surface_text" : ",", "entity_url" : "DBPedia>Comma", "language" : "en", "intended_trainer" : "commonsense_linguist" }
+{ "surface_text" : "extra", "entity_url" : "DBPedia>extra", "intended_trainer" : "commonsense_linguist" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "oz", "language" : "en", "entity_url" : "DBPedia>Ounce" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "ounce", "language" : "en", "entity_url" : "DBPedia>Ounce" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "kg", "language" : "en", "entity_url" : "DBPedia>Kilogram" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "kilogram", "language" : "en", "entity_url" : "DBPedia>Kilogram" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "gram", "language" : "en", "entity_url" : "DBPedia>Gram" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "g", "language" : "en", "entity_url" : "DBPedia>Gram" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "pound", "language" : "en", "entity_url" : "DBPedia>Pound_(mass)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "lb", "language" : "en", "entity_url" : "DBPedia>Pound_(mass)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "lbm", "language" : "en", "entity_url" : "DBPedia>Pound_(mass)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "pint", "language" : "en", "entity_url" : "DBPedia>Pint" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "pt", "language" : "en", "entity_url" : "DBPedia>Pint" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "p", "language" : "en", "entity_url" : "DBPedia>Pint" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "quart", "language" : "en", "entity_url" : "DBPedia>Quart" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "inch", "language" : "en", "entity_url" : "DBPedia>Inch" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "in", "language" : "en", "entity_url" : "DBPedia>Inch" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "cm", "language" : "en", "entity_url" : "DBPedia>Centimetre" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "foot", "language" : "en", "entity_url" : "DBPedia>Foot_(unit)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "feet", "language" : "en", "entity_url" : "DBPedia>Foot_(unit)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "ft", "language" : "en", "entity_url" : "DBPedia>Foot_(unit)" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "ml", "language" : "en", "entity_url" : "DBPedia>Millilitre" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "liter", "language" : "en", "entity_url" : "DBPedia>Litre" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "litre", "language" : "en", "entity_url" : "DBPedia>Litre" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "l", "language" : "en", "entity_url" : "DBPedia>Litre" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "bottle", "language" : "en", "entity_url" : "DBPedia>Bottle" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "cup", "language" : "en", "entity_url" : "DBPedia>Cup" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "slice", "language" : "en", "entity_url" : "DBPedia>Sliced_bread" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "bowl", "language" : "en", "entity_url" : "DBPedia>Bowl" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "jug", "language" : "en", "entity_url" : "DBPedia>Jug" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "order of", "entity_url" : "Wikitionary>Order" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "order", "entity_url" : "Wikitionary>Order" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "on the side", "entity_url" : "Wikitionary>on_the_side" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "side of", "entity_url" : "Wikitionary>on_the_side" }
+{ "intended_trainer" : "commonsense_linguist", "surface_text" : "side", "entity_url" : "Wikitionary>on_the_side" }

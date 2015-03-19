@@ -27,6 +27,15 @@ mongoDumpFromConceptDigger = socket_sender.sendPacketOverSocket(config.conceptDi
 set intended_trainer=$Project_trainer
 '''
 import re
+
+# Open file containing data of commonsense linguist and add surface text to a list
+with open("mongoDumpOfCommonSenseTraining.txt", "r") as f:
+    linguist_data = re.findall('"surface_text"\s:\s"(.*?)"', f.read())
+
+# replace lines having same surface text as commonsense linguist
+for data in linguist_data:
+    mongoDumpFromConceptDigger = re.sub('{.*"surface_text"\s:\s"'+data+'".*}', "",mongoDumpFromConceptDigger)
+
 mongoDumpFromConceptDigger = re.sub('}', ',"intended_trainer":"'+ TP_Frontend_Backend_Bridge.projectName + '_trainer"}', mongoDumpFromConceptDigger)
 #this mongoDump must be written in a hardisk file, so that command line utility of mongodb can be used to automatically import this data into mongo database
 f = open("data/mongoDumpFromConceptDigger.txt","wb")
@@ -35,7 +44,6 @@ t2 = time.time()
 print "concept digger & file writing took " + str(t2-t1) + " seconds"
  
 t1 = time.time()
-MongoCLI.noisy_NER.authenticate("fwadmin", "fwadmin")
 MongoCLI.mongo_collection_drop("noisy_NER","entity")
 MongoCLI.mongo_collection_drop("noisy_NER","Entity_to_Command")
  
