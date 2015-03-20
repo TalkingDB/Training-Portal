@@ -63,7 +63,6 @@ def start_training(request):
 
             if 'how_this_record' in synonym and synonym['how_this_record'] == "article_categories_en.nt":
                 # Condition 1 true so Add user id to list of approved trainers
-                print "adding synonym approved" + synonym["surface_text"] + entity["_id"]
                 entityModel.update(
                     {"_id": synonym["_id"]},
                     {"$addToSet": {"approved_by_trainer":user.id}}
@@ -78,14 +77,12 @@ def start_training(request):
         # enter questions in questions collection for progress and display of answered questions
         if questionModel.find({"question": entity["_id"]}).count():
             # if question exist add user id in list of trainers
-            print "updating question" + str(entity["_id"])
             questionModel.update(
                 {"question": entity["_id"]},
                 {"$addToSet": {"trainers":user.id}}
             )
         else:
             # if question dosent exist insert in table
-            print "Making a new question "+ entity["_id"]
             ques = {
                 'question': entity["_id"],
                 'frequency': entity["freq"],
@@ -123,7 +120,7 @@ def mongoquery(user_id, conceptType):
 
     return mongodata
 
-def get_synonyms(entity, source="article_categories_en.nt"):
+def get_synonyms(entity):
     """
     Get synonyms of entity
     """
