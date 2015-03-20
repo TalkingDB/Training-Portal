@@ -5,6 +5,12 @@
 {% load user_tag %}
 <div class="row">
     <div class="col-md-12">
+        <button class="btn btn-primary pull-right" id="robot-training">Start Robot Training</button>
+
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
         <div class="panel panel-default" id="total-progress">
             <div class="panel-heading">
                 <h3 class="text-center">Total Progress<span class="pull-right" style="font-size: 14px;"><a href="/report/download">Download csv</a> </span></h3>
@@ -91,6 +97,21 @@
                 alert("failed");
             });
         });
+
+    $('#robot-training').on('click', function () {
+        var $this = $(this);
+        $this.html('Robot Training In Progress...').attr('disabled','disabled');
+        $.ajax({
+              type: "POST",
+              url: '/bot-training/',
+        }).success(function(data){
+            console.log(data);
+            $this.html('Start Robot Training').removeAttr('disabled');
+        }).fail(function(){
+
+        });
+
+  });
 });
 </script>
 {% endblock %}

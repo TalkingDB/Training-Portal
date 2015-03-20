@@ -103,14 +103,24 @@ def skipQuestion(synonyms, user_id):
             entity_collection.update({"_id":id}, {"$pull": {"disapproved_by_trainer":user_id}})
     return True
 
-
 def get_total_questions_count():
+    """
+    """
+    return get_total_keyword_questions_count() + get_total_concept_questions_count()
+
+def get_total_keyword_questions_count():
+    """
+    Get total or maximum number of questions to be asked
+    """
+    surface_text_count = get_question_count("surface_text")
+    return surface_text_count
+
+def get_total_concept_questions_count():
     """
     Get total or maximum number of questions to be asked
     """
     entity_count = get_question_count("entity_url")
-    surface_text_count = get_question_count("surface_text")
-    return entity_count + surface_text_count
+    return entity_count
 
 def get_question_count(concept_type):
     """

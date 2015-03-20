@@ -55,7 +55,6 @@
           <td class="text-muted">
              <a href="/review/{{ ques.question }}" style="text-decoration: none;">{{ ques.question|removeprefix }}</a> ({{ques.frequency}})</td>
             <td>
-
                 {% for trainer in ques.trainers %}
                     <span class="label label-primary" style="background-color: {{ trainer|get_colourcode }}"> {{ trainer|getusername }}</span>
                 {% endfor %}
