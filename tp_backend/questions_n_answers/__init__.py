@@ -106,6 +106,7 @@ def skipQuestion(synonyms, user_id):
 
 def get_total_questions_count():
     """
+    Get total or maximum number of questions to be asked
     """
     entity_count = get_question_count("entity_url")
     surface_text_count = get_question_count("surface_text")
@@ -113,6 +114,7 @@ def get_total_questions_count():
 
 def get_question_count(concept_type):
     """
+    mongo query to get count of questions
     """
     mongoReply = entity_collection.aggregate([
         { "$match":{"intended_trainer":"Foodweasel_trainer"}
@@ -135,6 +137,7 @@ def get_question_count(concept_type):
 
 def get_user_answered_count(id):
     """
+    Get count of answered question by a specific user.
     """
     mongoReply = questions.find({"trainers":{"$in": [id]}})
     return len(list(mongoReply))

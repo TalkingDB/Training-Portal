@@ -5,9 +5,9 @@
 {% load user_tag %}
 {% if not error %}
 <div class="row" >
-    <div class="col-md-12" id="progress-label">
-        <span style="" class="label label-default">Progress</span>
-    </div>
+    <!--<div class="col-md-12" id="progress-label">-->
+        <!--<span style="" class="label label-default">Progress</span>-->
+    <!--</div>-->
     <div class="col-md-12">
         <div class="progress">
             <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: {{ progress.total }}%; color:black">
@@ -19,12 +19,12 @@
 <div class="row">
 <div class="col-md-11">
 {% if concept_type == "entity_url" %}
-<div><span style="font-size:11px;border-radius:0;background-color:#286090;" class="label label-default">CONCEPT</span> </a></div>
-<div style="margin-top:2px;"><a target="_blank" href="http://en.wikipedia.org/wiki/{{ text.split|join:'_' }}" class="main-link"><span  style="font-size:28px;color: dark-blue">{{text}}</span></a> <small style="font-size: 16px;"> was found <span style="color: black;">{{ frequency }} </span>times in catalog</small></h2></div>
+<div><span style="font-size:11px;border-radius:0;background-color:#286090;" class="label label-default">CONCEPT</span></div>
+<div style="margin-top:2px;"><span  style="font-size:28px;color: dark-blue">{{text}}</span> <small style="font-size: 16px;"> was found <span style="color: black;">{{ frequency }} </span>times in catalog</small></h2></div>
 <h5 style="padding-bottom:10px; padding-top:10px; color: #777;">Smarter.Codes thinks that there are various names for <span style="color: black;">{{text}}</span> . But Smarter.Codes can be wrong! Help us understand it better by choosing the right synonms of {{ text }}</h5>
 {% else %}
 <div><span style="font-size:11px;border-radius:0;" class="label label-default">KEYWORD</span> </div>
-<div style="margin-top:2px;"><a target="_blank" href="http://en.wikipedia.org/wiki/{{ text.split|join:'_' }}" class="main-link"><span  style="font-size:28px;color: dark-blue">{{text}}</span></a> <small style="font-size:16px;">   was found <span style="color: black;">{{ frequency }} </span>times in catalog </small></h2></div>
+<div style="margin-top:2px;"><span  style="font-size:28px;color: dark-blue">{{text}}</span> <small style="font-size:16px;">   was found <span style="color: black;">{{ frequency }} </span>times in catalog </small></h2></div>
 <h5 style="padding-bottom:10px; padding-top:10px; color: #777;">Smarter.Codes thinks of '{{ synonyms|length }} different concepts' when someone talks about {{ text }}. Please help reduce this confusion of Smarter.Codes by choosing 1 concept that it should think when '{{text}}' is being talked about</h5>
 {% endif %}
     </div>
@@ -79,7 +79,13 @@
            <div class="col-md-6" id="wikki-div">
             <div id="wikki-text">
                 <span id="redirected_text" class="text-warning"></span>
+                <div class="col-md-12 text-muted">
+                <span id="source" class="pull-right"></span>
+                    </div>
                <h4></h4>
+                <!--<div class="col-md-12 text-muted">-->
+                <!--<span id="source" class="pull-right"></span>-->
+                    <!--</div>-->
                <div class="wiki-image pull-right"></div>
                 <p></p>
             </div>
@@ -216,6 +222,21 @@
             }
             else{
             $('#wikki-text h4').html(data.parse.title);
+
+            var id = $this.find('.synonyms').val();
+
+            $.ajax({
+              type: "get",
+              url: "/entity/details/how_this_record/"+id,
+            }).success(function(data){
+                $('#wikki-text #source').html("Source : "+ data);
+            }).fail(function(){
+                console.log('source data not found ')
+            });
+
+
+
+
             if (blurb.find('.thumbinner')[0]){
             $('#wikki-text .wiki-image').html(blurb.find('.thumbinner')[0]).addClass('thumbnail').find(".thumbcaption").hide();
             }else{
