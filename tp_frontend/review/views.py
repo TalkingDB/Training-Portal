@@ -156,6 +156,9 @@ def save(request, entity):
                     'entity_url':entity_url,
                     'approved_by_trainer': [request.user.id],
                     'frequency': frequency,
+                    "how_this_record": 'user_defined',
+                    "intended_trainer" : "Foodweasel_trainer",
+
                  })
         if docs:
             entityModel.insert_many(docs)
@@ -280,7 +283,6 @@ def get_details_by_id(request, query_string, entity_id):
     if query string is equal to full data . Return object of that entity
     """
     entityModel = em.EntityModel(db, collection)
-    print "coming inside"
     entity = entityModel.select_one({"_id":ObjectId(entity_id)})
     if entity and entity[query_string]:
         return HttpResponse(entity[query_string].replace('_', ' '))
