@@ -26,7 +26,7 @@ mongoDb = "noisy_NER"
 
 client = MongoClient(mongoUrl, mongoPort)
 db = client[mongoDb]
-questionModel = em.EntityModel(db, 'questions')
+questionModel = db['questions']
 
 # root dit path
 root_dir_path = os.path.expanduser("~/Smarter.Codes/src")
@@ -54,7 +54,7 @@ def home(request):
         to_send['retraining_progress'] = True
 
     if request.user.is_staff:
-        questions = list(questionModel.select_all()) # get all answered questions
+        questions = list(questionModel.find({ "$query": {}, "$orderby": { "frequency" : -1 } })) # get all answered questions
         paginator = Paginator(questions, 20) # Show 20  per page
         page = request.GET.get('page') # get current page number
 
