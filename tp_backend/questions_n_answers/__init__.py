@@ -103,6 +103,10 @@ def skipQuestion(synonyms, user_id):
             entity_collection.update({"_id":id}, {"$pull": {"disapproved_by_trainer":user_id}})
     return True
 
+def get_total_questions_count():
+    """
+    """
+    return get_total_keyword_questions_count() + get_total_concept_questions_count()
 
 def get_total_keyword_questions_count():
     """

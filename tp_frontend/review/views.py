@@ -87,8 +87,7 @@ def index(request, resource=None):
         for synonym in synonyms:
             sorted_list.append({synonym[0]:synonym[1]})
 
-        total_questions = questions.get_total_questions_count()
-        progress = get_progress(total_questions, [request.user.id])
+        progress = get_progress([request.user.id])
         return render(request, 'review/index.html', {
                 'entity': entity_text,
                 'text': (' ').join(entity_text.split('_')),

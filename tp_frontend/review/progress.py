@@ -17,10 +17,7 @@ def progress(request):
 
     if ajax request so get list of checked trainers call for progress for that list of trainers.
     """
-    # get keyword question
-    keyword = questions.get_total_keyword_questions_count()
-    #get concept type questions
-    concept = questions.get_total_concept_questions_count()
+
 
     # request for updating total progress
     if request.method == 'POST':
@@ -28,23 +25,25 @@ def progress(request):
         # django template will pass list of unicode values
         trainers = request.POST.getlist('checked[]')
         # pass values to get progress and convert list of unicode values to list of integers
-        return_dict =  {'total-progress': get_progress(concept, keyword, [int(id) for id in trainers])['total']}
+        return_dict =  {'total-progress': get_progress([int(id) for id in trainers])['total']}
         result = json.dumps(return_dict)
         return HttpResponse(result)
     users = User.objects.all()
     trainers = [user.id for user in users]
     # get progress of every user
-    progress = get_progress(concept, keyword, trainers)
+    progress = get_progress(trainers)
 
     return render(request, 'review/progress.html', {'users' :users, "progress": progress})
 
 
-def get_progress(concept, keyword, trainers):
+def get_progress(trainers):
     """
     Calculate progress of list of trainers and total number of questions.
     """
-
-
+     # get keyword question
+    keyword = questions.get_total_keyword_questions_count()
+    #get concept type questions
+    concept = questions.get_total_concept_questions_count()
     # check if bot user exist
     if User.objects.get(username='robot'):
         # get object

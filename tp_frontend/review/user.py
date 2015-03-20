@@ -67,12 +67,9 @@ def home(request):
             # If page is out of range (e.g. 9999), deliver last page of results.
             to_send['questions'] = paginator.page(paginator.num_pages)
 
-    # get estimate number of questions : (Maximum number of questions we will ask)
-    total_questions = question_list.get_total_questions_count()
-
     # Progress of current user
     # pass total questions and list of ids of user
-    progress = get_progress(total_questions, [request.user.id])
+    progress = get_progress([request.user.id])
     to_send['progress'] = progress
 
     return render(request, 'review/profile.html', to_send)
