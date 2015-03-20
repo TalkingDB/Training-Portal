@@ -1,7 +1,7 @@
 from pymongo.mongo_client import MongoClient
 import entity_model as em
 
-client = MongoClient("training.smarter.codes",27017)
+client = MongoClient("192.168.1.231",27017)
 #client.noisy_NER.authenticate("fwadmin", "fwadmin")
 db = client['noisy_NER']
 entity_collection = db['entity']
