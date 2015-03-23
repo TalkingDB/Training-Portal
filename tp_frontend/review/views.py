@@ -225,7 +225,7 @@ def save_surface_text(request, entity):
             ques = {
                 'question': question[0],
                 'frequency': question[1],
-                'trainers': request.user.id
+                'trainers': [request.user.id]
             }
             questionModel.insertQuestion(ques)
 
