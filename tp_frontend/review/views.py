@@ -62,7 +62,6 @@ def index(request, resource=None):
                     checked = True
             if 'skipped_by_trainer' in entity:
                 skipped_by = skipped_by + entity['skipped_by_trainer']
-                print skipped_by
             if '>' in entity[synonym_type]:
                 surface_text = entity[synonym_type].split('>')[1]
                 val = surface_text.replace("_", " ").replace("-", " ")
