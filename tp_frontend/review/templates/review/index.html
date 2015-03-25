@@ -187,6 +187,7 @@
         }).css("background-color", "white");
 
         var text =  $(this).find('label .surface_text').text();
+        alert(text);
         var $this = $(this);
         $this.find(".glyphicon").hide();
         $this.find(".loader").css("visibility", "visible");
@@ -194,6 +195,7 @@
     var ajax_request = get_wikki_text(text, $this);
 });
     function get_wikki_text(text, $this){
+    var s_name = text;
     $.ajax({
         type: "GET",
         url: "http://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text&section=0&page="+text+"&callback=?",
@@ -201,7 +203,16 @@
         async: false,
         dataType: "json",
         success: function (data, textStatus, jqXHR) {
-
+            if (data.error){
+                $('#wikki-text p').html( '<p class="text-danger"> Wikipedia said no page exists with name '+ s_name+'</p>');
+                $('#wikki-text h4').html( '');
+                $('#wikki-text #redirected_text').html( '');
+                $('#wikki-text #source').html("");
+                $this.find(".loader").css("visibility", "hidden");
+                $this.find(".glyphicon").show();
+                $("#wikki-text").css("overflow", "hidden");
+            $('#wikki-div').find('h5').html('');
+            }
             if (data.parse.title){
             var markup = data.parse.text["*"];
             var blurb = $('<div></div>').html(markup);
@@ -224,7 +235,6 @@
             $('#wikki-text h4').html(data.parse.title);
 
             var id = $this.find('.synonyms').val();
-
             $.ajax({
               type: "get",
               url: "/entity/details/how_this_record/"+id,
@@ -233,9 +243,6 @@
             }).fail(function(){
                 console.log('source data not found ')
             });
-
-
-
 
             if (blurb.find('.thumbinner')[0]){
             $('#wikki-text .wiki-image').html(blurb.find('.thumbinner')[0]).addClass('thumbnail').find(".thumbcaption").hide();
@@ -251,7 +258,7 @@
              $this.find(".glyphicon").show();
             $this.find(".loader").css("visibility", "hidden");
             $("#wikki-text").css("overflow-y", "scroll");
-            $('#wikki-div').find('h5').html('For further information <a target="_blank" href="http://en.wikipedia.org/wiki/'+text+'" >Click Here</a> ')
+            $('#wikki-div').find('h5').html('For further information <a target="_blank" href="http://en.wikipedia.org/wiki/'+text+'" >Click Here</a> ');
         },
         error: function (errorMessage) {
 
