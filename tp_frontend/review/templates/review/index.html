@@ -187,7 +187,6 @@
         }).css("background-color", "white");
 
         var text =  $(this).find('label .surface_text').text();
-        alert(text);
         var $this = $(this);
         $this.find(".glyphicon").hide();
         $this.find(".loader").css("visibility", "visible");
@@ -232,7 +231,7 @@
                 get_wikki_text(text[0], $this);
             }
             else{
-            $('#wikki-text h4').html(data.parse.title);
+            $('#wikki-text h4').html('<a target="_blank" href="http://en.wikipedia.org/wiki/'+s_name+'" style="text-decoration:none">'+data.parse.title+'</a>');
 
             var id = $this.find('.synonyms').val();
             $.ajax({
@@ -258,7 +257,7 @@
              $this.find(".glyphicon").show();
             $this.find(".loader").css("visibility", "hidden");
             $("#wikki-text").css("overflow-y", "scroll");
-            $('#wikki-div').find('h5').html('For further information <a target="_blank" href="http://en.wikipedia.org/wiki/'+text+'" >Click Here</a> ');
+            $('#wikki-div').find('h5').html('For further information <a target="_blank" href="http://en.wikipedia.org/wiki/'+s_name+'" >Click Here</a> ');
         },
         error: function (errorMessage) {
 
