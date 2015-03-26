@@ -53,5 +53,21 @@
 
 </div>
 </div>
-
+</div>
+{% endblock %}
+        {% block jquery %}
+<script>
+    $(document).ready(function(){
+        $("#goto button").on('click', function(){
+            var goto_page = $("#goto input").val();
+            window.location.href = "?page="+ goto_page;
+        });
+        $('#pagination_textbox').on("keypress", function(e) {
+            if (e.keyCode == 13) {
+                var goto_page = $(this).val();
+                window.location.href = "?page="+ goto_page;
+            }
+        });
+    });
+</script>
 {% endblock %}

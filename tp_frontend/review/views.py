@@ -183,7 +183,7 @@ def save(request, entity):
             frequency = 0
             # if entity:
             #     frequency = entity[0]['frequency']
-            surface_text = value.strip()
+            surface_text = value.strip().lower()
             if surface_text:
                 no_tags = list(entity_collection.find({"entity_url": "~NoTag", "surface_text": surface_text}))
                 if no_tags:
