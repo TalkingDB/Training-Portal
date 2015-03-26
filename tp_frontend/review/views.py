@@ -26,6 +26,9 @@ collection = 'entity'
 client = MongoClient(mongoUrl, mongoPort)
 db = client[mongoDb]
 questionModel = em.EntityModel(db, 'questions')
+entity_collection = db['entity']
+
+file_path = os.path.expanduser("~/Smarter.Codes/customer_files/foodweasel.com/Training_Portal/")
 
 @login_required()
 def index(request, resource=None):
@@ -42,7 +45,40 @@ def index(request, resource=None):
         ques_list = questions.getNextQuestion(request.user.id)
         ques = ques_list['question']
         entities = ques_list['suggestions']
+    if entities and entities[0]["entity_url"] == "~NoTag":
+        progress = get_progress([request.user.id])
+        mentioned_in=[]
+        # for mentioned in entities[0]["mentioned_in"]:
+        #     string_val = mentioned.split('.')
+        #if len(mentioned_in) < 10:
 
+        # TODO: Remove Code and Use "mentioned_in"
+        if os.path.isfile(file_path+"1"):
+            f = open(file_path+"1", "r")
+            lines = f.read().split("\n")
+            for line in lines:
+                if len(mentioned_in) == 10:
+                    break
+                if entities[0]["surface_text"].replace("_", " ") in line.decode('utf-8'):
+                    if line not in mentioned_in:
+                        mentioned_in.append(line)
+        if os.path.isfile(file_path+"2"):
+            f = open(file_path+"2", "r")
+            lines = f.read().split("\n")
+            for line in lines:
+                if len(mentioned_in) == 10:
+                    break
+                if entities[0]["surface_text"].replace("_", " ") in line.decode('utf-8'):
+                    if line not in mentioned_in:
+                        mentioned_in.append(line)
+        to_send = {
+            'no_tag':'True',
+            "progress":progress,
+            "text": entities[0]["surface_text"],
+            "frequency": entities[0]["frequency"],
+            "mentioned_in": mentioned_in,
+        }
+        return render(request, 'review/index.html', to_send)
     if entities:
         if ques[2] == 'entity_url':
             entity_text = entities[0]['entity_url'].split('>')[1]
@@ -149,15 +185,24 @@ def save(request, entity):
             #     frequency = entity[0]['frequency']
             surface_text = value.strip()
             if surface_text:
-                docs.append({
-                    'surface_text': surface_text,
-                    'entity_url':entity_url,
-                    'approved_by_trainer': [request.user.id],
-                    'frequency': frequency,
-                    "how_this_record": 'user_defined',
-                    "intended_trainer" : "Foodweasel_trainer",
+                no_tags = list(entity_collection.find({"entity_url": "~NoTag", "surface_text": surface_text}))
+                if no_tags:
+                    for tag in no_tags:
+                        print tag["_id"]
+                        entity_collection.update(
+                            {"_id": tag["_id"]},
+                            {"$set": { 'entity_url': entity_url, "approved_by_trainer": [request.user.id]}}
+                        )
+                else:
+                    docs.append({
+                        'surface_text': surface_text,
+                        'entity_url':entity_url,
+                        'approved_by_trainer': [request.user.id],
+                        'frequency': frequency,
+                        "how_this_record": 'user_defined',
+                        "intended_trainer" : "Foodweasel_trainer",
 
-                 })
+                     })
         if docs:
             entityModel.insert_many(docs)
     if question:

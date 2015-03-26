@@ -26,13 +26,8 @@ def search(request):
 def get_search_question(text,type):
     mongoReply = entity_collection.aggregate([
         {"$match":
-            {"intended_trainer":"Foodweasel_trainer",
-             type  : {"$regex":text, "$options": "i"}
-             }
+            {type  : {"$regex":text, "$options": "i"}}
          },
-        {
-            "$unwind": "$mentioned_in"
-        },
         {"$group":
         {      "_id":"$"+type,
                "freq": {

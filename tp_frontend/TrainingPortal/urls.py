@@ -29,6 +29,7 @@ urlpatterns = patterns('',
     url(r'^review/delete/(?P<id>[-\d]+)$', 'review.views.delete'),
     url(r'^generate-results/$', 'review.user.retrain'),
     url(r'^generate-results/progress', 'review.user.check_retraining_progress'),
+    url(r'^No-Tags/$', 'review.no_tag.display_no_tag'),
     
     url(r'^bot/$', 'bot.views.bot'),
     url(r'^bot/step/(?P<process>[-\w]+)$', 'bot.views.bot'),

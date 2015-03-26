@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Profile{% endblock %}
+{% block content %}
+{% load user_tag %}
+<div class="row">
+    <div class="col-md-12">
+        <h4> No Tag List</h4>
+    </div>
+</div>
+<div class = "row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+  <!-- Default panel contents -->
+  <!-- Table -->
+  <table class="table table-striped">
+      <tr>
+          <th>Frequency</th>
+          <th>Text</th>
+      </tr>
+      {% for tag in no_tags %}
+      <tr>
+          <td class="text-muted">
+            {{ tag.frequency }}
+          </td>
+            <td>
+               {{ tag.surface_text|removeprefix }}
+          </td>
+          {% if tag.surface_text != "." %}
+          <td><a href="/review/{{ tag.surface_text }}" class="pull-right btn btn-primary">View Source</a></td>
+          {% else %}
+          <td></td>
+          {% endif %}
+      </tr>
+      {% endfor %}
+  </table>
+
+            <div class="panel-footer" style="height:45px;">
+                <span class="step-links">
+                    {% if no_tags.has_previous %}
+                        <a href="?page={{ no_tags.previous_page_number }}"><span class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true" style="font-size:18px; top:4px; margin-right:4px;"></span></a>
+                    {% endif %}
+                    <span class="current">
+                        Page {{ no_tags.number }} of {{ no_tags.paginator.num_pages }}
+                    </span>
+
+                    {% if no_tags.has_next %}
+                        <a href="?page={{ no_tags.next_page_number }}"><span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true" style="font-size:18px; top:4px; margin-left:4px;"></span></a>
+                    {% endif %}
+                </span>
+                <span id="goto">
+                <input type="text"  name="page_number" size="2" id="pagination_textbox"> <button class="btn btn-sm btn-default" style="margin-left:5px; padding-bottom:4px;padding-top:4px;">Go To Page</button>
+            </span>
+
+</div>
+</div>
+
+{% endblock %}

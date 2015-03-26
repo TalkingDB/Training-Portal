@@ -16,6 +16,20 @@
         </div>
     </div>
 </div>
+
+{% if no_tag %}
+<div class="row">
+    <div class="col-md-12">
+        <div><span style="font-size:11px;border-radius:0;background-color:#286090;" class="label label-default">No-Tag</span></div>
+<div style="margin-top:2px;"><span  style="font-size:28px;color: dark-blue">{{text}}</span> <small style="font-size: 16px;"> was found <span style="color: black;">{{ frequency }} </span>times in catalog</small></h2></div>
+    </div>
+    <div class="col-md-12">
+        {% for text_val in mentioned_in %}
+            <p>{{text_val}}<p>
+        {% endfor %}
+        </div>
+</div>
+{% else %}
 <div class="row">
 <div class="col-md-11">
 {% if concept_type == "entity_url" %}
@@ -126,6 +140,7 @@
                  </div>
            </div>
        </div>
+{% endif %}
         {% else %}
         <div class="alert alert-warning" role="alert">
             No further information is available. (The requested entity is unknown)
@@ -202,6 +217,7 @@
         async: false,
         dataType: "json",
         success: function (data, textStatus, jqXHR) {
+            console.log(data);
             if (data.error){
                 $('#wikki-text p').html( '<p class="text-danger"> Wikipedia said no page exists with name '+ s_name+'</p>');
                 $('#wikki-text h4').html( '');
