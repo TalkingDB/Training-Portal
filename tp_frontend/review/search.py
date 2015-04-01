@@ -17,10 +17,20 @@ def search(request):
     """
     """
     to_send = {}
+    no_tag_list = []
+    text_list = []
     text = request.GET.get('search', '').replace(" ", "[-_\s]")
-    to_send['result_entity'] = get_search_question(text,"entity_url")
-    to_send['result_text'] =get_search_question(text,"surface_text")
-    return render(request, 'review/search.html', to_send)
+    result_entity = get_search_question(text,"entity_url")
+    for result in get_search_question(text,"surface_text"):
+        if result["entity_url"] == "~NoTag":
+            no_tag_list.append(result)
+        else:
+            text_list.append(result)
+    return render(request, 'review/search.html', {
+        "result_entity": result_entity,
+        "result_text": text_list,
+        "result_no_tag": no_tag_list
+    })
 
 
 def get_search_question(text,type):
@@ -35,6 +45,9 @@ def get_search_question(text,type):
                },
                "name": {
                    "$first": "$"+ type
+               },
+               "entity_url": {
+                    "$first": "$entity_url"
                }
             }
         },
