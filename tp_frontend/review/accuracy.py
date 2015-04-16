@@ -223,14 +223,16 @@ def mass_query_format(inputFile):
     """
     input_instruct = ''
     for i in inputFile:
-        if "\n" in i:
-           i =  i.replace("\n", "")
-        if i[0] == '"':
-            input_instruct = input_instruct+ i[1:].strip()
-        elif i[-1] == '"':
-            input_instruct = input_instruct+ "~" + i[:-1].strip() + ","
-        else:
-            input_instruct = input_instruct + "~"+i.strip()
+        if len(i) > 0:
+            print i[0]
+            if "\n" in i:
+               i =  i.replace("\n", "")
+            if len(i) > 0 and i[0] == '"':
+                input_instruct = input_instruct+ i[1:].strip()
+            elif len(i) > 0 and i[-1] == '"':
+                input_instruct = input_instruct+ "~" + i[:-1].strip() + ","
+            else:
+                input_instruct = input_instruct + "~"+i.strip()
 
     return input_instruct.split(",")
 
@@ -256,17 +258,18 @@ def line_query_format(inputFile):
     """
     input_instruct = []
     for i in inputFile:
-        if "\n" in i:
-           i =  i.replace("\n", "")
-        if i[0] == '"':
-            i = i[1:].strip()
-        elif i[-1] == '"':
+        if len(i) > 0:
+            if "\n" in i:
+               i =  i.replace("\n", "")
+            if len(i) > 0 and i[0] == '"':
+                i = i[1:].strip()
+            elif len(i) > 0 and i[-1] == '"':
 
-            i =  i[:-1].strip()
-        else:
-            i = i.strip()
-        if i not in input_instruct:
-            input_instruct.append(i)
+                i =  i[:-1].strip()
+            else:
+                i = i.strip()
+            if i not in input_instruct:
+                input_instruct.append(i)
     return input_instruct
 
 # def mass_input_query(inputFile):
