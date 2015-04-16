@@ -224,7 +224,6 @@ def mass_query_format(inputFile):
     input_instruct = ''
     for i in inputFile:
         if len(i) > 0:
-            print i[0]
             if "\n" in i:
                i =  i.replace("\n", "")
             if len(i) > 0 and i[0] == '"':
