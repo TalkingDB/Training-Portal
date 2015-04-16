@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Upload file{% endblock %}
+{% block content %}
+{{ form.errors }}
+{% if documents %}
+    <ul>
+    {% for document in documents %}
+        <li><a href="{{ document.outfile.url }}">{{ document.outfile.name }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No documents.</p>
+{% endif %}
+    <!-- Upload form. Note enctype attribute! -->
+    <form action="/upload/" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <p>{{ form.non_field_errors }}</p>
+        <p>{{ form.docfile.label_tag }} {{ form.docfile.help_text }}</p>
+        <p>
+            {{ form.docfile.errors }}
+            {{ form.docfile }}
+        </p>
+        <p>{{ form.input_type }}</p>
+        <label>{{ form.only_1st_restaurant }} Only 1st Restaurant</label>
+        <p><input type="submit" value="Upload" /></p>
+    </form>
+
+{% endblock content %}

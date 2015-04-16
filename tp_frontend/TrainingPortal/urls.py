@@ -1,5 +1,6 @@
 from django.conf.urls import patterns, include, url
-
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 admin.autodiscover()
 
@@ -30,7 +31,12 @@ urlpatterns = patterns('',
     url(r'^generate-results/$', 'review.user.retrain'),
     url(r'^generate-results/progress', 'review.user.check_retraining_progress'),
     url(r'^No-Tags/$', 'review.no_tag.display_no_tag'),
+    url(r'^upload/$', 'review.upload.upload'),
     
     url(r'^bot/$', 'bot.views.bot'),
     url(r'^bot/step/(?P<process>[-\w]+)$', 'bot.views.bot'),
-)
+)+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+#
+# urlpatterns = patterns('',
+#     (r'^', include('TrainingPortal.urls')),
+# ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

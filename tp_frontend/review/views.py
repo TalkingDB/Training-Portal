@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect, HttpResponse
-from review.models import Entity, EntityText, NoTag, Result
 from django.http import Http404
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
