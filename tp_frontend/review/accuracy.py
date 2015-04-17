@@ -167,7 +167,7 @@ def initialization(inputFile, type, only_1st):
         instruction_list = mass_query_format(inputFile)
     elif type == 'line_input':
         instruction_list = line_query_format(inputFile)
-
+        
     with open(outputFilePath, "wb") as out_csv:
         writer = csv.writer(out_csv, delimiter=',')
 
@@ -226,14 +226,14 @@ def mass_query_format(inputFile):
         if len(i) > 0:
             if "\n" in i:
                i =  i.replace("\n", "")
-            if len(i) > 0 and i[0] == '"':
-                input_instruct = input_instruct+ i[1:].strip()
-            elif len(i) > 0 and i[-1] == '"':
-                input_instruct = input_instruct+ "~" + i[:-1].strip() + ","
+            if len(i) > 0 and i.strip()[0] == '"':
+                input_instruct = input_instruct + i.strip()[1:]
+            elif i.strip()[-1] == '"':
+                input_instruct = input_instruct+ "~" + i.strip()[:-1] + "@"
             else:
                 input_instruct = input_instruct + "~"+i.strip()
 
-    return input_instruct.split(",")
+    return input_instruct.split("@")
 
 
 def line_query_format(inputFile):
@@ -260,15 +260,14 @@ def line_query_format(inputFile):
         if len(i) > 0:
             if "\n" in i:
                i =  i.replace("\n", "")
-            if len(i) > 0 and i[0] == '"':
-                i = i[1:].strip()
-            elif len(i) > 0 and i[-1] == '"':
-
-                i =  i[:-1].strip()
+            if i.strip()[0] == '"':
+                i = i.strip()[1:]
+            elif i[-1] == '"':
+                i =  i.strip()[:-1]
             else:
                 i = i.strip()
-            if i not in input_instruct:
-                input_instruct.append(i)
+            if i.strip() not in input_instruct:
+                input_instruct.append(i.strip())
     return input_instruct
 
 # def mass_input_query(inputFile):
