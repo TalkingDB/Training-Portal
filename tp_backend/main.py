@@ -139,7 +139,9 @@ def NER_plain_text():
     
     f.close()
     NERProcess.kill()
-
+    """
+    Calculate frequency of entity and update in mongodb
+    """
     from pymongo import MongoClient
     client = MongoClient("127.0.0.1",27017)
     db = client['noisy_NER']
