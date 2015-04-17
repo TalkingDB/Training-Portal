@@ -128,10 +128,6 @@ def get_recommendation(instruction):
                                         new_val = d[0] + val
                                 item_result = item_result +new_val + "\n"
                         result[-1] = result[-1]+"\n"+item_result
-                        # print option_list
-                        # print result
-                        # if option_list:
-                        #     result[-1] = result[-1]+"\n"+("").join(option_list)
             diff = 3 - len(text["data"])
             for x in range(0, diff):
                 result.append("")
@@ -167,7 +163,7 @@ def initialization(inputFile, type, only_1st):
         instruction_list = mass_query_format(inputFile)
     elif type == 'line_input':
         instruction_list = line_query_format(inputFile)
-        
+
     with open(outputFilePath, "wb") as out_csv:
         writer = csv.writer(out_csv, delimiter=',')
 
@@ -269,53 +265,3 @@ def line_query_format(inputFile):
             if i.strip() not in input_instruct:
                 input_instruct.append(i.strip())
     return input_instruct
-
-# def mass_input_query(inputFile):
-#     """
-#     """
-#     global item_dict
-#     global option_dict
-#     global i
-#     global instruct
-#     global result
-#
-#     outputFile = "/mass_output.csv"
-#     input_instruct = ''
-#     for i in inputFile:
-#         if "\n" in i:
-#            i =  i.replace("\n", "")
-#         if i[0] == '"':
-#             input_instruct = input_instruct+ i[1:]
-#         elif i[-1] == '"':
-#             input_instruct = input_instruct+ "~" + i[:-1] + ","
-#         else:
-#             input_instruct = input_instruct + "~"+i
-#
-#     with open(outputFile, "wb") as out_csv:
-#         writer = csv.writer(out_csv, delimiter=',')
-#         #writer.writerow(['instruction', "Restaurant 1", "Restaurant 2", "Restaurant 3"])
-#
-#         # for row in reader:
-#         #     query_list = row[0].split("\n")
-#         #     print query_list
-#         for instruction in input_instruct.split(','):
-#             item_dict = {}
-#             option_dict = {}
-#             i = 0
-#             instruct = ""
-#             result = []
-#             print instruction
-#             if instruction:
-#                 get_recommendation(instruction)
-#                 print "writing csv"
-#                 writer.writerow(result)
-#
-#         return outputFile
-#
-# # reply = commandProcessorHit('oelo itop pizza')
-# # print reply
-# # print re.findall(r'2 label "(.*?)" end . entity "~NoTag"', reply)
-#
-#
-# def line_input_query(file):
-#     print "lin query"
