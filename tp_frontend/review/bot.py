@@ -164,15 +164,24 @@ def mongoquery(user_id, conceptType):
     mongo query to get list of entities
     """
     mongodata = entityModel.aggregate([
-        {   "$match":{"intended_trainer":"Foodweasel_trainer"}
+        {   "$match":{"intended_trainer":"Foodweasel_trainer",
+            "approved_by_trainer" :{"$nin": [user_id]},
+            "skipped_by_trainer" :{"$nin": [user_id]},
+            "disapproved_by_trainer" :{"$nin": [user_id]},
+            }
         },
         {
             "$unwind": "$mentioned_in"
         },
         {"$group":
-            {   "_id": "$" + conceptType
+            {   "_id": "$" + conceptType,
+                "freq": {
+                    "$sum": 1
+                },
             }
-         }
+         },
+
+         {"$sort" :{"freq":1}}
     ])
 
     return mongodata
