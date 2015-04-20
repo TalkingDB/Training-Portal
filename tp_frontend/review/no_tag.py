@@ -19,7 +19,7 @@ mongoDb = "noisy_NER"
 client = MongoClient(mongoUrl, mongoPort)
 db = client[mongoDb]
 entityModel = db['entity']
-
+entityModel.ensure_index('frequency')
 
 @login_required
 def display_no_tag(request):
