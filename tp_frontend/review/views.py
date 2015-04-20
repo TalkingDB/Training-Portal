@@ -212,7 +212,7 @@ def save(request, entity):
         else:
             ques = {
                 'question': question[0],
-                'frequency': question[1],
+                'frequency': int(question[1]),
                 'trainers': [request.user.id]
             }
             questionModel.insertQuestion(ques)
@@ -267,7 +267,7 @@ def save_surface_text(request, entity):
         else:
             ques = {
                 'question': question[0],
-                'frequency': question[1],
+                'frequency': int(question[1]),
                 'trainers': [request.user.id]
             }
             questionModel.insertQuestion(ques)
@@ -295,7 +295,7 @@ def skip(request):
     else:
         ques = {
             'question': question[0],
-            'frequency': question[1],
+            'frequency': int(question[1]),
             'trainers': [request.user.id]
         }
         questionModel.insertQuestion(ques)
