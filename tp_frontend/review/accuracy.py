@@ -183,8 +183,6 @@ def initialization(inputFile, type, only_1st):
                     if len(result[1]) > 1:
                         res = result[1].split("\n")
                         if len(res[2:]) > 0:
-                            print res
-                            print res[2:]
                             for item in res[2:]:
                                 if item:
                                     if not "\t" in item:
