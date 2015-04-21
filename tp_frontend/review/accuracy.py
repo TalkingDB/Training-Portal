@@ -178,18 +178,27 @@ def initialization(inputFile, type, only_1st):
                 print "writing csv"
                 if only_1st:
                     res_item = "No Item available"
-                    res_option = "No Options available"
+                    res_option = ""
+                    res_item_key = ''
                     if len(result[1]) > 1:
                         res = result[1].split("\n")
-                        for item in res[2:]:
-                            if item:
-                                if not "\t" in item:
-                                    res_item = item
-                                    break
-                        if "\t" in res[res.index(res_item)+1]:
-                            res_option = res[res.index(res_item)+1].replace("\t", "")
-                        result = [result[0], res[0], res[1], res_item, res_option]
+                        if len(res[2:]) > 0:
+                            print res
+                            print res[2:]
+                            for item in res[2:]:
+                                if item:
+                                    if not "\t" in item:
+                                        res_item_key = res[res.index(item)+1]
+                                        res_item = res[res.index(item)+1].replace("\t", "")
+                                        break
+                            # if len(res) >
+                            for x in range(res.index(res_item_key)+1, len(res)):
+                                if "\toption" in res[x]:
+                                    res_option+= res[x].replace("\t", "")
+                                    res_option+="\n"
 
+
+                            result = [result[0], res[0], res[1], res_item, res_option]
                 writer.writerow(result)
 
     return "output/"+ outputFile
