@@ -178,7 +178,11 @@ def get_recommendation(instruction, writer):
                 i = 0
                 if rest_parsed < 3:
                     rest_parsed =  rest_parsed+1
-                    result.append("Resturant = "+data["name"]+"\nResturant-url = "+data["properties"]['complete']+"\n")
+                    rest_data = "Resturant = "+data["name"]+"\nResturant-url = "+data["properties"]['complete']+"\n"
+                    if len(data["not_found"]) > 0:
+                         for item in data["not_found"]:
+                            rest_data+= "Not Found : "+item+"\n"
+                    result.append(rest_data)
                     if data["type"] == "parent_group":
                         for child in data["children"]:
                             get_child_data(child)
