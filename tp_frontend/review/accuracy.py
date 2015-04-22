@@ -95,7 +95,72 @@ def get_child_data(data):
             for child in data["children"]:
                 get_child_data(child)
 
-def get_recommendation(instruction):
+def get_recommendation_only_1st(instruction,  only_1st, writer):
+    """
+    """
+    global item_dict
+    global option_dict
+    global i
+    if instruction:
+        r = requests.post(url, data=json.dumps({"parent":parent, "instruction":instruction.strip()}), headers=headers)
+        text =  json.loads(r.text)
+        rest_parsed = 0
+        total_rest = 1#total number of restaurants
+        if len(text["data"]) > 0:
+            for data in text["data"]:
+                item_dict = {}
+                option_dict = {}
+                i = 0
+                if rest_parsed < total_rest:
+                    rest_parsed =  rest_parsed+1
+                    if data["type"] == "parent_group":
+                        for child in data["children"]:
+                            get_child_data(child)
+                        item_result = ""
+                        new = item_dict
+                        print "---------------------------------------------------------------------->"
+                        for key, val in new.iteritems():
+                            # print key
+                            # print val
+                            # print sorted(val, reverse=True)
+                            result = []
+                            result.append(key)
+                            max_score = 0
+                            options_found = 0
+                            best_item = ''
+                            for d in sorted(val, reverse=True):
+                                new_val = d[0]
+                                score = d[1]
+                                if score > max_score:
+                                    max_score = score
+                                    best_item = d[0]
+                            if "Item = " in best_item:
+                                sep = 'Item = '
+                                best_item = best_item.split(sep, 1)[1]
+                            result.append(best_item)
+                            for key, val in option_dict.iteritems():
+                                if key in best_item:
+                                    val = val.strip()
+                                    result.append(val)
+                                    options_found = 1
+                            if options_found == 0:
+                                result.append("No Options")
+                            result.append("Resturant = "+data["name"]+"\nResturant-url = "+data["properties"]['complete'])
+                            writer.writerow(result)
+                    if len(data["not_found"]) > 0:
+                        print_notfound(data["not_found"], writer)
+
+
+#print not found items into csv
+#takes csv writer and not found key as key
+def print_notfound(data, writer):
+    for item in data:
+        result.append(item)
+        result.append("Not Found")
+    writer.writerow(result)
+
+
+def get_recommendation(instruction, writer):
     """
     """
     global item_dict
@@ -121,7 +186,8 @@ def get_recommendation(instruction):
                         new = item_dict
 
                         for key, val in new.iteritems():
-                            for d in sorted(val, reverse=True):
+                            #sorted using score
+                            for d in sorted(val, key=lambda e: e[1], reverse=True):
                                 new_val = d[0]
                                 for key, val in option_dict.iteritems():
                                     if key in d[0]:
@@ -174,30 +240,37 @@ def initialization(inputFile, type, only_1st):
             instruct = ""
             result = []
             if instruction:
-                get_recommendation(instruction)
-                print "writing csv"
-                if only_1st:
-                    res_item = "No Item available"
-                    res_option = ""
-                    res_item_key = ''
-                    if len(result[1]) > 1:
-                        res = result[1].split("\n")
-                        if len(res[2:]) > 0:
-                            for item in res[2:]:
-                                if item:
-                                    if not "\t" in item:
-                                        res_item_key = res[res.index(item)+1]
-                                        res_item = res[res.index(item)+1].replace("\t", "")
-                                        break
-                            # if len(res) >
-                            for x in range(res.index(res_item_key)+1, len(res)):
-                                if "\toption" in res[x]:
-                                    res_option+= res[x].replace("\t", "")
-                                    res_option+="\n"
-
-
-                            result = [result[0], res[0], res[1], res_item, res_option]
-                writer.writerow(result)
+                if(only_1st):
+                    get_recommendation_only_1st(instruction, only_1st, writer)
+                else:
+                    get_recommendation(instruction, writer)
+                    writer.writerow(result)
+                # exit()
+                # if only_1st:
+                #     res_item = "No Item available"
+                #     res_option = ""
+                #     res_item_key = ''
+                #     if len(result[1]) > 1:
+                #         res = result[1].split("\n")
+                #         if len(res[2:]) > 0:
+                #             for item in res[2:]:
+                #                 if item:
+                #                     if not "\t" in item:
+                #                         res_item_key = res[res.index(item)+1]
+                #                         res_item = res[res.index(item)+1].replace("\t", "")
+                #                         break
+                #             # if len(res) >
+                #             for x in range(res.index(res_item_key)+1, len(res)):
+                #                 if "\toption" in res[x]:
+                #                     res_option+= res[x].replace("\t", "")
+                #                     res_option+="\n"
+                #
+                #
+                #             result = [result[0], res[0], res[1], res_item, res_option]
+                # print "<---writing csv"
+                # print result;
+                # print "writing csv--->"
+                # writer.writerow(result)
 
     return "output/"+ outputFile
 
