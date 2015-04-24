@@ -15,9 +15,6 @@ config = RawConfigParser()
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 config.read(BASE_DIR+'/config.ini')
 
-
-
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 
@@ -86,6 +83,9 @@ DATABASES = {
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
+
+MEDIA_ROOT = os.path.join(BASE_DIR+"/review", 'media')
+MEDIA_URL = '/media/'
 
 LANGUAGE_CODE = 'en-us'
 

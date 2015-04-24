@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect, HttpResponse
-from review.models import Entity, EntityText, NoTag, Result
 from django.http import Http404
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
@@ -213,7 +212,7 @@ def save(request, entity):
         else:
             ques = {
                 'question': question[0],
-                'frequency': question[1],
+                'frequency': int(question[1]),
                 'trainers': [request.user.id]
             }
             questionModel.insertQuestion(ques)
@@ -268,7 +267,7 @@ def save_surface_text(request, entity):
         else:
             ques = {
                 'question': question[0],
-                'frequency': question[1],
+                'frequency': int(question[1]),
                 'trainers': [request.user.id]
             }
             questionModel.insertQuestion(ques)
@@ -296,7 +295,7 @@ def skip(request):
     else:
         ques = {
             'question': question[0],
-            'frequency': question[1],
+            'frequency': int(question[1]),
             'trainers': [request.user.id]
         }
         questionModel.insertQuestion(ques)

@@ -2,16 +2,32 @@
 
 {% block title %}Progress{% endblock %}
 {% block content %}
-<div class="row">
+{% load user_tag %}
+<div class="row search-results">
     <div class="col-md-12">
         <h3>Search Results:</h3>
+    </div>
+    <div class="col-md-4" style="border-right: 1px solid lightgrey; padding-bottom:30px;">
         {% if result_text %}
+            <h4 style="border-bottom: 1px solid lightgrey; padding-bottom:30px;">Surface Text <small>( {{ result_text|length }} results found )</small></h4>
             {% for result in result_text %}
-                <p><a href="/review/{{ result.name}}" >{{ result.name }}</a></p>
+                <p><a href="/review/{{ result.name}}" >{{ result.name|removeprefix }}</a></p>
             {% endfor %}
         {% endif %}
+    </div>
+    <div class="col-md-4" style="border-right: 1px solid lightgrey; padding-bottom:30px;">
         {% if result_entity %}
+        <h4 style="border-bottom: 1px solid lightgrey; padding-bottom:30px;">Entity url <small>( {{ result_entity|length }} results found )</small></h4>
             {% for result in result_entity %}
+                <p><a href="/review/{{ result.name}}" >{{ result.name|removeprefix }}</a></p>
+            {% endfor %}
+        {% endif %}
+    </div>
+    <div class="col-md-4" style="padding-bottom:30px;">
+
+        {% if result_no_tag %}
+        <h4 style="border-bottom: 1px solid lightgrey; padding-bottom:30px;">No tags <small>( {{ result_no_tag|length }} results found )</small></h4>
+            {% for result in result_no_tag %}
                 <p><a href="/review/{{ result.name}}" >{{ result.name }}</a></p>
             {% endfor %}
         {% endif %}
