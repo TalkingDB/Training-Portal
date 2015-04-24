@@ -5,7 +5,11 @@ from ConfigParser import RawConfigParser
 import entity_model as em
 from pymongo import MongoClient
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.views.decorators.csrf import csrf_exempt
+from search import get_search_question
+from django.contrib import messages
 import os
+import json
 
 config = RawConfigParser()
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -46,3 +50,47 @@ def display_no_tag(request):
         return render(request, 'review/no_tag.html', {"no_tags":no_tags_list})
 
     raise Http404
+
+@csrf_exempt
+@login_required
+def get_associated_entities(request):
+    """
+    Get all entities matching search text to associate  a No Tag with Entity
+    """
+    text = request.GET.get('data', '').replace(" ", "[-_\s]")
+    if not request.user.is_staff or not request.user.is_superuser:
+        raise Http404
+    result = get_search_question(text,"entity_url")
+    return HttpResponse(json.dumps(result))
+
+@csrf_exempt
+@login_required
+def associate_entity(request):
+    """
+    Associate  a No Tag with Entity
+    """
+    if not request.user.is_staff or not request.user.is_superuser:
+        raise Http404
+
+    surface_text =  request.POST["surface_text"]
+    entity =  request.POST["entity"]
+    new = request.POST["new"]
+    if new == "true":
+        entity = entity.replace(" ", "_").capitalize()
+        if list(entityModel.find({"entity_url": "DBPedia>"+entity})) or list(entityModel.find({"entity_url": "DBPedia>"+entity.title()})):
+            url = "reload"
+            messages.error(request,"Entity with name "+entity+ " already exist! Please select from list of search options!")
+            return HttpResponse(json.dumps({"url": url}))
+        else:
+            entity = "DBPedia>" + entity
+    try:
+        entityModel.update({"surface_text": surface_text}, {"$set": {"entity_url": entity, "approved_by_trainer":[request.user.id]}})
+        url = "/review/"+ entity
+        messages.success(request,'Keyword '+ str(surface_text)+ ' associated with ' + str(entity))
+    except:
+        url = "reload"
+        messages.error(request,"Error in associating no tag with entity. Please Try again")
+
+    return HttpResponse(json.dumps({"url":url}))
+
+
