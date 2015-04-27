@@ -1,4 +1,17 @@
 from django import forms
+import CuisineSelection.cuisine_selection as cuisine
+
+
+def format_cuisine_for_choices():
+    """
+    """
+    cuisines = cuisine.get_all_cuisines()
+    output = []
+
+    for c in cuisines:
+        output.append((c,c))
+    return output
+
 
 CHOICES=[('mass_input', 'Mass Input'),
          ('line_input', 'Single Line Input')]
@@ -16,3 +29,9 @@ class DocumentForm(forms.Form):
         value = self.cleaned_data['docfile']
         if not value.name.endswith('.csv'):
             raise forms.ValidationError(u'Only csv')
+
+
+CUISINE_CHOICES=format_cuisine_for_choices()
+
+class CuisineForm(forms.Form):
+    cuisine = forms.ChoiceField(choices=CUISINE_CHOICES, required=True)

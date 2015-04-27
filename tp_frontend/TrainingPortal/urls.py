@@ -32,7 +32,7 @@ urlpatterns = patterns('',
     url(r'^generate-results/progress', 'review.user.check_retraining_progress'),
     url(r'^No-Tags/$', 'review.no_tag.display_no_tag'),
     url(r'^upload/$', 'review.upload.upload'),
-    
+    url(r'^cuisine_selection/$', 'review.cuisine.select_cuisine'),    
     url(r'^bot/$', 'bot.views.bot'),
     url(r'^bot/step/(?P<process>[-\w]+)$', 'bot.views.bot'),
 )+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
