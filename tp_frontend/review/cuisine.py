@@ -16,6 +16,7 @@ def select_cuisine(request):
         if form.is_valid():
             data = form.cleaned_data['cuisine']
             cuisine.select_cuisine(data)
+	    cuisine.set_current_cuisine(data)
             messages.add_message(request, messages.INFO, 'Cuisine '+ str(data)+ " Selected!")
             return redirect('/cuisine_selection')
 
