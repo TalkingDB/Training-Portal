@@ -8,8 +8,10 @@ import re
 import time
 
 output_dir_path = os.path.expanduser("~/Smarter.Codes/src/TrainingPortal/tp_frontend/review/media/output/")
-url="http://training.smarter.codes:8001/recommendation/generate/"
-parent = '{"key": "uid","value":["72894", "81443", "70681", "30857", "52951", "73498", "70263", "68964", "29602", "79779", "65010", "68924", "46911", "75328", "79960", "38911", "74661", "71519", "70131", "69384"]}'
+url="http://testing.smarter.codes:8001/recommendation/generate/"
+#parent = '{"key": "uid","value":["72894", "81443", "70681", "30857", "52951", "73498", "70263", "68964", "29602", "79779", "65010", "68924", "46911", "75328", "79960", "38911", "74661", "71519", "70131", "69384"]}'
+parent = '{"key": "uid","value":["73539", "68534", "82231", "74609", "81264", "67522", "73346", "79853", "67411", "69666", "81522", "79308", "61523", "65309", "75317", "79578", "70136", "73233", "80379", "65009", "74950", "73255", "81937", "75195", "63384", "2857", "81760", "973", "73229", "67478"]}'
+
 headers = {'Content-type': 'application/json', 'Accept': '*/*', "Authorization": "Basic Zm9vZHdlYXNlbC5jb206Q2hhbmdlTWU="}
 client = requests.session()
 item_dict = {}
@@ -32,7 +34,7 @@ def commandProcessorHit(arg):
     """
     try:
         s = socket.socket()
-        s.connect(("training.smarter.codes", 5012))
+        s.connect(("testing.smarter.codes", 5012))
         s.send(arg)
         buf = ''
         #Iterator applied to receive chunks of data over socket

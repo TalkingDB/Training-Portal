@@ -10,15 +10,29 @@
     {% endfor %}
 </ul>
 {% endif %}
+<p><b>{{ current_cuisines  }}</b></p>
     <form action="/cuisine_selection/" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <p>{{ form.non_field_errors }}</p>
-        <p>{{ form.cuisine.label_tag }}</p>
+        <p>Select {{ form.cuisine.label_tag }}(Select multiple using control or shift key)</p>
         <p>
             {{ form.cuisine.errors }}
             {{ form.cuisine }}
         </p>
         <p><input type="submit" value="Select" /></p>
+<style>
+#id_cuisine {
+ height:500px !important;
+width:150px !important;
+}
+</style>
+
     </form>
 
 {% endblock content %}
+<style>
+#id_cuisine {
+ height:500px !important;
+ line-height:24px !important;
+}
+</style>

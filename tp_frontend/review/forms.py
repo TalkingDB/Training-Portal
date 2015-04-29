@@ -32,6 +32,7 @@ class DocumentForm(forms.Form):
 
 
 CUISINE_CHOICES=format_cuisine_for_choices()
-
+def get_current_cuisines():
+    return cuisine.get_current_cuisine();
 class CuisineForm(forms.Form):
-    cuisine = forms.ChoiceField(choices=CUISINE_CHOICES, required=True)
+    cuisine = forms.MultipleChoiceField(choices=CUISINE_CHOICES, required=True)
