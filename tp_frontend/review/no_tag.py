@@ -76,13 +76,14 @@ def associate_entity(request):
     entity =  request.POST["entity"]
     new = request.POST["new"]
     if new == "true":
-        entity = entity.replace(" ", "_").capitalize()
-        if list(entityModel.find({"entity_url": "DBPedia>"+entity})) or list(entityModel.find({"entity_url": "DBPedia>"+entity.title()})):
+        entity = entity.strip().replace(" ", "_").capitalize()
+        if list(entityModel.find({"entity_url": "DBPedia>"+entity})) or list(entityModel.find({"entity_url": "DBPedia>"+entity.title()})) \
+            or list(entityModel.find({"entity_url": "SmarterCodes>"+entity})):
             url = "reload"
             messages.error(request,"Entity with name "+entity+ " already exist! Please select from list of search options!")
             return HttpResponse(json.dumps({"url": url}))
         else:
-            entity = "DBPedia>" + entity
+            entity = "SmarterCodes>" + entity
     try:
         entityModel.update({"surface_text": surface_text}, {"$set": {"entity_url": entity, "approved_by_trainer":[request.user.id]}})
         url = "/review/"+ entity
