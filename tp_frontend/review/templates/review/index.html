@@ -330,7 +330,8 @@
             }).success(function(data){
                 if (data.length > 2){
                      $.each(eval(data.replace(/[\r\n]/, "")), function(i, item) {
-                        if (item.entity_url.indexOf("DBPedia") >= 0){
+                        console.log(item.entity_url);
+                        if (item.entity_url.indexOf("DBPedia") >= 0 || item.entity_url.indexOf("SmarterCodes") >= 0){
                             var entity_url = removePrefix(item.entity_url);
                             if(entity_url){
                                 $(".panel-body").append("<label><input type='radio' name='entity' value='"+ item.entity_url +"'> "+ entity_url +" </label></br>");
