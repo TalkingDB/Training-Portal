@@ -57,104 +57,106 @@ def start_training(request):
     is_spcl_char_entity = False
     #process mongodata
     for entity in data['result']:
-        # get synonyms of specific entity
-        synonyms = get_synonyms(entity["_id"])
 
-        # Check if entity name contains "(" because we have some entities like DBPedia>Chicken_(food)
-        # so in this case we will split this entity by ">" pick Chicken_(food) then split by "_(" and
-        # pick Chicken, Convert it to lower case chicken and save its plural form (chickens)
-        # we will check synonyms for chicken, chickens and chicken (food) (as default value)
+        if ">" in entity["_id"]:
+            # get synonyms of specific entity
+            synonyms = get_synonyms(entity["_id"])
 
-        if "(" in entity["_id"]:
-            # substring from entity_url "DBPedia>Chicken_(Food)" will become "chicken"
-            synonym_substring = entity["_id"].split('>')[1].split("_(")[0].replace("_", " ").lower()
+            # Check if entity name contains "(" because we have some entities like DBPedia>Chicken_(food)
+            # so in this case we will split this entity by ">" pick Chicken_(food) then split by "_(" and
+            # pick Chicken, Convert it to lower case chicken and save its plural form (chickens)
+            # we will check synonyms for chicken, chickens and chicken (food) (as default value)
 
-            # plural form of substring (chicken) will be chickens
-            plural_synonym = p.plural(synonym_substring)
-            # Set "is_spcl_char = True" so that we can know that this entity_url contains a special char
-            # and we need different operation for it
-            is_spcl_char_entity = True
-        else:
-            # If entity_url is normal text (DBPedia>Chicken). It will just split by ">", Pick Chicken and convert
-            # to lower case (chicken)
-            # replace("_", " ") will only work if we encounter entity url like (DBPedia>Diet_Coke)
-            # In this case after split (Diet_coke) we will replace "_" by " " and convert to lower (diet coke)
-            # In the end p.plural(chicken) will give us "chickens" and p.plura(diet coke) will give us "diet cokes"
+            if "(" in entity["_id"]:
+                # substring from entity_url "DBPedia>Chicken_(Food)" will become "chicken"
+                synonym_substring = entity["_id"].split('>')[1].split("_(")[0].replace("_", " ").lower()
 
-            plural_synonym = p.plural(entity["_id"].split('>')[1].replace("_", " ").lower())
-
-        # set a static variable "is_plural_synonym to False"
-        # We will check this variable so we can know that plural_synonym exists in our list
-        # of synonyms. If It is set to True that means synonym with same text exist else we have to add new text
-        is_plural_synonym = False
-
-
-        for synonym in synonyms:
-            # Condition 1: source of synonym should be article_categories_en.nt
-            # It is because we observed suggestion names of article_categories_en.nt are same as question
-            # DBPedia>Diet_coke : diet coke
-
-            if 'how_this_record' in synonym and synonym['how_this_record'] == "article_categories_en.nt":
-                # Condition 1 true so Add user id to list of approved trainers
-                entityModel.update(
-                    {"_id": synonym["_id"]},
-                    {"$addToSet": {"approved_by_trainer":user.id}}
-                )
-
-            # Condition 2: plural_synonym text already exist in our synonym list
-            elif synonym['surface_text'] == plural_synonym:
-
-                # If this condition is true we will not add new synonym so change value of "is_plural_synonym" to True
-                is_plural_synonym = True
-
-                entityModel.update(
-                    {"_id": synonym["_id"]},
-                    {"$addToSet": {"approved_by_trainer":user.id}}
-                )
-
-            # Condition 3 : Check if "is_spcl_char_entity" is True if yes than it will compare
-            # current synonym's surface text with synonym_substring. If we are to find a match in our
-            # synonym list check the value
-            elif is_spcl_char_entity and synonym['surface_text'] == synonym_substring:
-                entityModel.update(
-                    {"_id": synonym["_id"]},
-                    {"$addToSet": {"approved_by_trainer":user.id}}
-                )
-
-            # If every condition failed then add ROBOT to list of "disapproved_by_trainer" of specific synonym
+                # plural form of substring (chicken) will be chickens
+                plural_synonym = p.plural(synonym_substring)
+                # Set "is_spcl_char = True" so that we can know that this entity_url contains a special char
+                # and we need different operation for it
+                is_spcl_char_entity = True
             else:
-                entityModel.update(
-                    {"_id": synonym["_id"]},
-                    {"$addToSet": {"disapproved_by_trainer":user.id}}
+                # If entity_url is normal text (DBPedia>Chicken). It will just split by ">", Pick Chicken and convert
+                # to lower case (chicken)
+                # replace("_", " ") will only work if we encounter entity url like (DBPedia>Diet_Coke)
+                # In this case after split (Diet_coke) we will replace "_" by " " and convert to lower (diet coke)
+                # In the end p.plural(chicken) will give us "chickens" and p.plura(diet coke) will give us "diet cokes"
+
+                plural_synonym = p.plural(entity["_id"].split('>')[1].replace("_", " ").lower())
+
+            # set a static variable "is_plural_synonym to False"
+            # We will check this variable so we can know that plural_synonym exists in our list
+            # of synonyms. If It is set to True that means synonym with same text exist else we have to add new text
+            is_plural_synonym = False
+
+
+            for synonym in synonyms:
+                # Condition 1: source of synonym should be article_categories_en.nt
+                # It is because we observed suggestion names of article_categories_en.nt are same as question
+                # DBPedia>Diet_coke : diet coke
+
+                if 'how_this_record' in synonym and synonym['how_this_record'] == "article_categories_en.nt":
+                    # Condition 1 true so Add user id to list of approved trainers
+                    entityModel.update(
+                        {"_id": synonym["_id"]},
+                        {"$addToSet": {"approved_by_trainer":user.id}}
+                    )
+
+                # Condition 2: plural_synonym text already exist in our synonym list
+                elif synonym['surface_text'] == plural_synonym:
+
+                    # If this condition is true we will not add new synonym so change value of "is_plural_synonym" to True
+                    is_plural_synonym = True
+
+                    entityModel.update(
+                        {"_id": synonym["_id"]},
+                        {"$addToSet": {"approved_by_trainer":user.id}}
+                    )
+
+                # Condition 3 : Check if "is_spcl_char_entity" is True if yes than it will compare
+                # current synonym's surface text with synonym_substring. If we are to find a match in our
+                # synonym list check the value
+                elif is_spcl_char_entity and synonym['surface_text'] == synonym_substring:
+                    entityModel.update(
+                        {"_id": synonym["_id"]},
+                        {"$addToSet": {"approved_by_trainer":user.id}}
+                    )
+
+                # If every condition failed then add ROBOT to list of "disapproved_by_trainer" of specific synonym
+                else:
+                    entityModel.update(
+                        {"_id": synonym["_id"]},
+                        {"$addToSet": {"disapproved_by_trainer":user.id}}
+                    )
+
+            # Add a new synonym if synonym matching test 0f plural_synonym dose not exist.
+            if not is_plural_synonym:
+                entityModel.insert({
+                        'surface_text': plural_synonym,
+                        'entity_url': entity["_id"],
+                        'approved_by_trainer': [user.id],
+                        'frequency': 0,
+                        "how_this_record": 'user_defined',
+                        "intended_trainer" : "Foodweasel_trainer",
+
+                     })
+
+            # enter questions in questions collection for progress and display of answered questions
+            if questionModel.find({"question": entity["_id"]}).count():
+                # if question exist add user id in list of trainers
+                questionModel.update(
+                    {"question": entity["_id"]},
+                    {"$addToSet": {"trainers":user.id}}
                 )
-
-        # Add a new synonym if synonym matching test 0f plural_synonym dose not exist.
-        if not is_plural_synonym:
-            entityModel.insert({
-                    'surface_text': plural_synonym,
-                    'entity_url': entity["_id"],
-                    'approved_by_trainer': [user.id],
-                    'frequency': 0,
-                    "how_this_record": 'user_defined',
-                    "intended_trainer" : "Foodweasel_trainer",
-
-                 })
-
-        # enter questions in questions collection for progress and display of answered questions
-        if questionModel.find({"question": entity["_id"]}).count():
-            # if question exist add user id in list of trainers
-            questionModel.update(
-                {"question": entity["_id"]},
-                {"$addToSet": {"trainers":user.id}}
-            )
-        else:
-            # if question dosent exist insert in table
-            ques = {
-                'question': entity["_id"],
-                'frequency': entity["freq"],
-                'trainers': [user.id]
-            }
-            questionModel.insert(ques)
+            else:
+                # if question dosent exist insert in table
+                ques = {
+                    'question': entity["_id"],
+                    'frequency': entity["freq"],
+                    'trainers': [user.id]
+                }
+                questionModel.insert(ques)
 
     return HttpResponse({"process": "finished"})
 
@@ -164,11 +166,7 @@ def mongoquery(user_id, conceptType):
     mongo query to get list of entities
     """
     mongodata = entityModel.aggregate([
-        {   "$match":{"intended_trainer":"Foodweasel_trainer",
-            "approved_by_trainer" :{"$nin": [user_id]},
-            "skipped_by_trainer" :{"$nin": [user_id]},
-            "disapproved_by_trainer" :{"$nin": [user_id]},
-            }
+        {   "$match":{"intended_trainer":"Foodweasel_trainer"}
         },
         {
             "$unwind": "$mentioned_in"
