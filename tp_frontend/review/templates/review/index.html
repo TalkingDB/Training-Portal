@@ -4,6 +4,7 @@
 {% block content %}
 {% load user_tag %}
 {% if not error %}
+
 <div class="row" >
     <!--<div class="col-md-12" id="progress-label">-->
         <!--<span style="" class="label label-default">Progress</span>-->
@@ -23,11 +24,22 @@
         <div><span style="font-size:11px;border-radius:0;background-color:#286090;" class="label label-default">No-Tag</span></div>
 <div style="margin-top:2px;"><span  style="font-size:28px;color: dark-blue">{{text}}</span> <small style="font-size: 16px;"> was found <span style="color: black;">{{ frequency }} </span>times in catalog</small></h2></div>
     </div>
-    <div class="col-md-12">
+    <div class="col-md-6">
         {% for text_val in mentioned_in %}
             <p>{{text_val}}<p>
         {% endfor %}
         </div>
+
+    <div class="col-md-6" id="associate-no-tag">
+        <p>Associate Entity with <b>{{ text }}</b></p>
+        <input type="text" class="col-md-6" id="no-tag-entities">
+        <button class="pull-right btn btn-primary btn-sm hidden" id="associate-btn">Associate</button>
+        <button class="pull-right btn btn-primary btn-sm hidden" id="add_new_entity">Add new Entity</button>
+        <div class="panel panel-default hidden col-md-12">
+          <div class="panel-body">
+          </div>
+        </div>
+    </div>
 </div>
 {% else %}
 <div class="row">
@@ -152,6 +164,7 @@
 {% block jquery %}
 <script>
     $(document).ready(function(e){
+    {% if not no_tag %}
         checked = [];
         unchecked = [];
         question = ['{{ question }}',{{ frequency }},'{{ concept_type }}']
@@ -280,7 +293,106 @@
         }
     });
 }
+{% else %}
+        var typingTimer;                //timer identifier
+        var doneTypingInterval = 10000;  //time in ms, 4 second
 
+        //on keyup, start the countdown
+        $("#no-tag-entities").keyup(function(){
+            clearTimeout(typingTimer);
+            var $this = $(this);
+            if($this.val().length > 2){
+                typingTimer = setTimeout(doneTyping($(this)), doneTypingInterval);
+            }else{
+                $(".panel-body").append("<p>No results found.</p>");
+                $("#associate-btn").addClass("hidden");
+                $("#add_new_entity").addClass("hidden");
+            }
+        });
+
+        //on keydown, clear the countdown
+        $("#no-tag-entities").keydown(function(){
+            $(".panel-body").empty();
+            clearTimeout(typingTimer);
+        });
+
+        //user is "finished typing," do something
+        function doneTyping ($this) {
+            val = $this.val();
+            var panel = $this.siblings(".panel");
+            panel.removeClass("hidden");
+            $("#add_new_entity").removeClass("hidden");
+            $(".panel-body").empty();
+            $("#associate-btn").addClass("hidden");
+            $.ajax({
+                  type: "GET",
+                  url: '/no-tags?data='+val,
+            }).success(function(data){
+                if (data.length > 2){
+                     $.each(eval(data.replace(/[\r\n]/, "")), function(i, item) {
+                        console.log(item.entity_url);
+                        if (item.entity_url.indexOf("DBPedia") >= 0 || item.entity_url.indexOf("SmarterCodes") >= 0){
+                            var entity_url = removePrefix(item.entity_url);
+                            if(entity_url){
+                                $(".panel-body").append("<label><input type='radio' name='entity' value='"+ item.entity_url +"'> "+ entity_url +" </label></br>");
+                            }
+                        }
+
+                    });
+                }else{
+                    $(".panel-body").empty();
+                    $("#associate-btn").addClass("hidden");
+                    $(".panel-body").append("<p>No results found. Add new entity with this name ??</p></br><button class='btn btn-primary' id='add_entity'>Add Entity</button>");
+                    $("#add_new_entity").addClass("hidden");
+                    $("#add_entity").on("click", function(){
+                        entity = $("#no-tag-entities").val();
+                        associateEntity(entity, true);
+                    });
+                }
+            }).fail(function(){
+                console.log("fail")
+            });
+        }
+
+        function removePrefix(entity_url){
+            if (entity_url.indexOf(">") > 0){
+                return entity_url.split(">")[1].replace(/\-/g, " ").replace(/\_/g, " ")
+            }
+            return false
+
+        }
+
+        $('.panel-body').on("change", function(){
+            var checked = $('input[type="radio"]:checked', '.panel-body').val();
+            $("#associate-btn").removeClass("hidden");
+
+        });
+        $("#associate-btn").on("click", function(){
+            var checked = $('input[type="radio"]:checked', '.panel-body').val();
+
+            associateEntity(checked, false);
+        });
+        $("#add_new_entity").on("click", function(){
+            entity = $("#no-tag-entities").val();
+            associateEntity(entity, true);
+        });
+
+        function associateEntity(entity, new_entity){
+            $.ajax({
+              type: "POST",
+              url: "/no-tags/associate/",
+              data: {"entity": entity,"surface_text": "{{text}}", "new": new_entity},
+            }).success(function(data){
+              var obj = jQuery.parseJSON(data);
+                  if (obj.url == "reload"){
+                    window.location.reload();
+                  }else{
+                    window.location.href = obj.url;
+                  }
+            });
+        }
+
+        {% endif %}
 });
 </script>
 {% endblock %}
