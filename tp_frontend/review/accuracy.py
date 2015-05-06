@@ -8,10 +8,8 @@ import re
 import time
 
 output_dir_path = os.path.expanduser("~/Smarter.Codes/src/TrainingPortal/tp_frontend/review/media/output/")
-url="http://testing.smarter.codes:8001/recommendation/generate/"
-#parent = '{"key": "uid","value":["72894", "81443", "70681", "30857", "52951", "73498", "70263", "68964", "29602", "79779", "65010", "68924", "46911", "75328", "79960", "38911", "74661", "71519", "70131", "69384"]}'
-parent = '{"key": "uid","value":["73539", "68534", "82231", "74609", "81264", "67522", "73346", "79853", "67411", "69666", "81522", "79308", "61523", "65309", "75317", "79578", "70136", "73233", "80379", "65009", "74950", "73255", "81937", "75195", "63384", "2857", "81760", "973", "73229", "67478"]}'
-
+url="http://foodweasel-live.smarter.codes:8001/recommendation/generate/"
+parent = '{"key": "uid","value":["72894", "81443", "70681", "30857", "52951", "73498", "70263", "68964", "29602", "79779", "65010", "68924", "46911", "75328", "79960", "38911", "74661", "71519", "70131", "69384"]}'
 headers = {'Content-type': 'application/json', 'Accept': '*/*', "Authorization": "Basic Zm9vZHdlYXNlbC5jb206Q2hhbmdlTWU="}
 client = requests.session()
 item_dict = {}
@@ -120,7 +118,6 @@ def get_recommendation_only_1st(instruction,  only_1st, writer):
                             get_child_data(child)
                         item_result = ""
                         new = item_dict
-                        print "---------------------------------------------------------------------->"
                         for key, val in new.iteritems():
                             # print key
                             # print val
@@ -151,6 +148,12 @@ def get_recommendation_only_1st(instruction,  only_1st, writer):
                             writer.writerow(result)
                     if len(data["not_found"]) > 0:
                         print_notfound(data["not_found"], writer)
+        else:
+            no_result = [instruction]
+            for x in range(0, 3):
+                no_result.append("No Recommendations")
+            writer.writerow(no_result)
+
 
 
 #print not found items into csv
@@ -173,6 +176,7 @@ def get_recommendation(instruction, writer):
         r = requests.post(url, data=json.dumps({"parent":parent, "instruction":instruction.strip()}), headers=headers)
         text =  json.loads(r.text)
         rest_parsed = 0
+        print text
         if len(text["data"]) > 0:
             for data in text["data"]:
                 item_dict = {}
@@ -204,6 +208,7 @@ def get_recommendation(instruction, writer):
             for x in range(0, diff):
                 result.append("")
         else:
+            print "coming here"
             for x in range(0, 3):
                 result.append("No Recommendations")
 
@@ -303,19 +308,15 @@ def mass_query_format(inputFile):
 
     return list by splitting string.
     """
-    input_instruct = ''
-    for i in inputFile:
+    input_instruct = []
+    spamreader = csv.reader(inputFile, delimiter=',')
+    for i in spamreader:
         if len(i) > 0:
-            if "\n" in i:
-               i =  i.replace("\n", "")
-            if len(i) > 0 and i.strip()[0] == '"':
-                input_instruct = input_instruct + i.strip()[1:]
-            elif i.strip()[-1] == '"':
-                input_instruct = input_instruct+ "~" + i.strip()[:-1] + "@"
+            if "\n" in i[0]:
+                input_instruct.append(str(i[0].replace("\n", "~")))
             else:
-                input_instruct = input_instruct + "~"+i.strip()
-
-    return input_instruct.split("@")
+                input_instruct.append(str(i[0].strip()))
+    return input_instruct
 
 
 def line_query_format(inputFile):
