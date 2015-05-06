@@ -10,6 +10,7 @@ from search import get_search_question
 from django.contrib import messages
 import os
 import json
+import TP_Frontend_Backend_Bridge
 
 config = RawConfigParser()
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -85,7 +86,10 @@ def associate_entity(request):
         else:
             entity = "SmarterCodes>" + entity
     try:
-        entityModel.update({"surface_text": surface_text}, {"$set": {"entity_url": entity, "approved_by_trainer":[request.user.id]}})
+        entityModel.update({"surface_text": surface_text}, {"$set": {
+            "entity_url": entity, "approved_by_trainer":[request.user.id],
+            "intended_trainer" : str(TP_Frontend_Backend_Bridge.projectName)+"_trainer"
+        }})
         url = "/review/"+ entity
         messages.success(request,'Keyword '+ str(surface_text)+ ' associated with ' + str(entity))
     except:
