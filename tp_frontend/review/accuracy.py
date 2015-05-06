@@ -339,16 +339,31 @@ def line_query_format(inputFile):
 
     """
     input_instruct = []
-    for i in inputFile:
+    spamreader = csv.reader(inputFile, delimiter=',')
+    for i in spamreader:
         if len(i) > 0:
-            if "\n" in i:
-               i =  i.replace("\n", "")
-            if i.strip()[0] == '"':
-                i = i.strip()[1:]
-            elif i[-1] == '"':
-                i =  i.strip()[:-1]
+            if "\n" in i[0]:
+                for val in i[0].split("\n"):
+                    input_instruct.append(val)
             else:
-                i = i.strip()
-            if i.strip() not in input_instruct:
-                input_instruct.append(i.strip())
+                input_instruct.append(str(i[0].strip()))
+
+    # for i in inputFile:
+    #     print i
+    #     if len(i) > 0:
+    #         if "\n" in i:
+    #            i =  i.replace("\n", "")
+    #         if i.strip()[0] == '"':
+    #             i = i.strip()[1:]
+    #         elif i[-1] == '"':
+    #             i =  i.strip()[:-1]
+    #         else:
+    #             i = i.strip()
+    #         # To stop duplicate inputs uncomment if i.strip() not in input_instruct
+    #         # it will check if we have saved same query before.
+    #         # and remove if True
+    #
+    #         #if i.strip() not in input_instruct:
+    #         if True:
+    #             input_instruct.append(i.strip())
     return input_instruct
