@@ -1,4 +1,4 @@
-import config
+import backend_config as config
 import time
 from communicate_outside import socket_sender
 from communicate_outside import MongoCLI

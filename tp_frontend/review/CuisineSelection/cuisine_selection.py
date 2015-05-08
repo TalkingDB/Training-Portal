@@ -26,7 +26,6 @@ def select_cuisine(cuisines):
                 if row[0] == cuisine:
                     print "called for "+cuisine
                     process_restaurants(row[1])
-                    csvfile.closed
     return False
 
 def process_restaurants(res_list):
@@ -45,7 +44,7 @@ def process_restaurants(res_list):
     
 def clear_cuisine():
     try:
-    	subprocess.call('sudo find /home/anil.gautam/Smarter.Codes/customer_files/foodweasel.com/UIP -name "*.json" -print0 | xargs -0 rm', shell=True, executable='/bin/bash')
+    	subprocess.call('sudo find '+ c.UIP_path +' -name "*.json" -print0 | xargs -0 rm', shell=True, executable='/bin/bash')
     except Exception as e:
 	print e
 	return False
@@ -72,6 +71,8 @@ def set_current_cuisine(cuisines):
 def get_current_cuisine():
     """
     """
-    f = open(c.output+"/current.txt", "rb").read()
-    return f.replace("\n", "").strip()
+    if os.path.isfile(c.output+"/current.txt"):
+        f = open(c.output+"/current.txt", "rb").read()
+        return f.replace("\n", "").strip()
+    return "Selected Cuisine Not Available"
 

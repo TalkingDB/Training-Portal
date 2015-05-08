@@ -11,7 +11,7 @@ CP_path = os.path.expanduser('~/Smarter.Codes/src/CommandNet_Processor/src/main.
 
 def initializeCommandNetProcessor_to_ComputeHighPriorityTrainingQuestions():
     p = Popen(['python', CP_path, 'ner', '5006', 'compute_high_priority_training_questions'])
-    time.sleep(4)
+    time.sleep(10)
     return p
 
 def initializeCommandNetProcessor_to_TrainUIPWithLearntKnowledge():
