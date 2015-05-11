@@ -7,21 +7,26 @@ restaurants = glob.glob(config.all_menu_path+"/*")
 all_cuisines = {}
 i = 0
 for res in restaurants:
+    current_cuisines = []
     f = open(res,'r')
     try:
         data = json.loads(f.read())
         cuisines =  data["data"][0]["properties"]["cuisines"]
         res_id =  data["unique_value"]
-        print cuisines
         if cuisines:
             if "," in cuisines:
                 for c in cuisines.split(","):
-                    if c in all_cuisines:
-                        print res_id
-                        all_cuisines[c].append(res_id)
+                    c = c.strip()
+                    if c not in current_cuisines:
+                        current_cuisines.append(c)
+                        if c in all_cuisines:
+                            all_cuisines[c].append(res_id)
+                        else:
+                            all_cuisines[c] = [res_id]
                     else:
-                        all_cuisines[c] = [res_id]
+                        print c
             else:
+                cuisines = cuisines.strip()
                 if cuisines in all_cuisines:
                     all_cuisines[cuisines].append(res_id)
                 else:
