@@ -144,7 +144,7 @@ def get_all_entities():
     """
     """
     mongodata = synonym_collection.aggregate([
-        { "$match":{"intended_trainer":t.projectname+"_trainer"}},
+        { "$match":{"intended_trainer":t.projectName+"_trainer"}},
         {
             "$unwind": "$mentioned_in"
         },

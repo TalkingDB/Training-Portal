@@ -139,7 +139,7 @@ def start_training(request):
                         'approved_by_trainer': [user.id],
                         'frequency': 0,
                         "how_this_record": 'user_defined',
-                        "intended_trainer" : t.projectname+"_trainer",
+                        "intended_trainer" : t.projectName+"_trainer",
 
                      })
 
@@ -167,7 +167,7 @@ def mongoquery(user_id, conceptType):
     mongo query to get list of entities
     """
     mongodata = entityModel.aggregate([
-        {   "$match":{"intended_trainer":t.projectname+"_trainer"}
+        {   "$match":{"intended_trainer":t.projectName+"_trainer"}
         },
         {
             "$unwind": "$mentioned_in"
