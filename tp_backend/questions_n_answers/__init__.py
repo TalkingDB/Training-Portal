@@ -127,7 +127,7 @@ def get_question_count(concept_type):
     mongo query to get count of questions
     """
     mongoReply = entity_collection.aggregate([
-        { "$match":{"intended_trainer":"Foodweasel_trainer"}
+        { "$match":{"intended_trainer":TP_Frontend_Backend_Bridge.projectName+"_trainer"}
          },
         {
             "$unwind": "$mentioned_in"
