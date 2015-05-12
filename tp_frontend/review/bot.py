@@ -6,6 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 import os
 import inflect
+import TP_Frontend_Backend_Bridge as t
 
 p = inflect.engine()
 from ConfigParser import RawConfigParser
@@ -138,7 +139,7 @@ def start_training(request):
                         'approved_by_trainer': [user.id],
                         'frequency': 0,
                         "how_this_record": 'user_defined',
-                        "intended_trainer" : "Foodweasel_trainer",
+                        "intended_trainer" : t.projectname+"_trainer",
 
                      })
 
@@ -166,7 +167,7 @@ def mongoquery(user_id, conceptType):
     mongo query to get list of entities
     """
     mongodata = entityModel.aggregate([
-        {   "$match":{"intended_trainer":"Foodweasel_trainer"}
+        {   "$match":{"intended_trainer":t.projectname+"_trainer"}
         },
         {
             "$unwind": "$mentioned_in"
@@ -191,6 +192,6 @@ def get_synonyms(entity):
 
     data = entityModel.find({
         "entity_url": entity,
-        "intended_trainer" : "Foodweasel_trainer"
+        "intended_trainer" : t.projectName+"_trainer"
     }, {"mentioned_in": 0, "frequency": 0, "seed_category": 0})
     return data

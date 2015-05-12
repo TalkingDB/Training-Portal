@@ -5,6 +5,7 @@ from pymongo.mongo_client import MongoClient
 from django.contrib.auth.models import User
 import cStringIO as StringIO
 import csv
+import TP_Frontend_Backend_Bridge as t
 
 
 
@@ -143,7 +144,7 @@ def get_all_entities():
     """
     """
     mongodata = synonym_collection.aggregate([
-        { "$match":{"intended_trainer":"Foodweasel_trainer"}},
+        { "$match":{"intended_trainer":t.projectname+"_trainer"}},
         {
             "$unwind": "$mentioned_in"
         },

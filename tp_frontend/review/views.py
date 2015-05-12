@@ -12,6 +12,7 @@ import os
 import json
 from progress import get_progress
 from ConfigParser import RawConfigParser
+import TP_Frontend_Backend_Bridge as t
 
 config = RawConfigParser()
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -199,7 +200,7 @@ def save(request, entity):
                         'approved_by_trainer': [request.user.id],
                         'frequency': frequency,
                         "how_this_record": 'user_defined',
-                        "intended_trainer" : "Foodweasel_trainer",
+                        "intended_trainer" : t.projectName+"_trainer",
 
                      })
         if docs:
