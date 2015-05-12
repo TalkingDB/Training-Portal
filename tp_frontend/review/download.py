@@ -102,3 +102,66 @@ def user_report_download(request, id):
         except Exception as e:
             print e
     return response
+
+
+@login_required
+def mass_training(request):
+    training_data = []
+    if not request.user.is_staff or not request.user.is_superuser:
+        return Http404
+    mongodata = get_all_entities()
+    for data in mongodata:
+        synonyms = get_synonyms(data["_id"])
+        entity = data['_id'].split('>')[1].replace("_", " ").replace("-", " ")
+        for synonym in synonyms:
+            frequency = "0"
+            if "frequency" in synonym:
+                frequency = str(synonym["frequency"])
+            training_data.append({
+                "frequency": data["freq"],
+                "entity": entity.encode('utf8'),
+                "synonym": synonym["surface_text"].encode('utf8') + " (" +frequency+")"
+            })
+    def data():
+        csvfile = StringIO.StringIO()
+        csvwriter = csv.writer(csvfile)
+        csvwriter.writerow(["frequency","entity","synonym (frequency)"])
+        for data in training_data:
+            try:
+                csvwriter.writerow([data["frequency"],data["entity"], data["synonym"]])
+            except Exception as e:
+                print e
+                print data
+        yield csvfile.getvalue()
+
+    response = HttpResponse(data())
+    response["Content-Disposition"] = "attachment; filename=Mass-training.csv"
+    return response
+
+
+def get_all_entities():
+    """
+    """
+    mongodata = synonym_collection.aggregate([
+        { "$match":{"intended_trainer":"Foodweasel_trainer"}},
+        {
+            "$unwind": "$mentioned_in"
+        },
+        {"$group":
+         {      "_id": "$entity_url",
+                "freq": {
+                    "$sum": 1
+                }
+            }
+        },
+        {"$sort" :{"freq":-1}},
+    ])
+    return mongodata["result"]
+
+def get_synonyms(entity):
+    """
+    """
+    mongodata = synonym_collection.find({
+        "entity_url": entity
+    }, {"mentioned_in": 0})
+    return mongodata
