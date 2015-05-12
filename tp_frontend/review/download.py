@@ -112,17 +112,18 @@ def mass_training(request):
         return Http404
     mongodata = get_all_entities()
     for data in mongodata:
-        synonyms = get_synonyms(data["_id"])
-        entity = data['_id'].split('>')[1].replace("_", " ").replace("-", " ")
-        for synonym in synonyms:
-            frequency = "0"
-            if "frequency" in synonym:
-                frequency = str(synonym["frequency"])
-            training_data.append({
-                "frequency": data["freq"],
-                "entity": entity.encode('utf8'),
-                "synonym": synonym["surface_text"].encode('utf8') + " (" +frequency+")"
-            })
+        if ">" in data["_id"]:
+            synonyms = get_synonyms(data["_id"])
+            entity = data['_id'].split('>')[1].replace("_", " ").replace("-", " ")
+            for synonym in synonyms:
+                frequency = "0"
+                if "frequency" in synonym:
+                    frequency = str(synonym["frequency"])
+                training_data.append({
+                    "frequency": data["freq"],
+                    "entity": entity.encode('utf8'),
+                    "synonym": synonym["surface_text"].encode('utf8') + " (" +frequency+")"
+                })
     def data():
         csvfile = StringIO.StringIO()
         csvwriter = csv.writer(csvfile)
