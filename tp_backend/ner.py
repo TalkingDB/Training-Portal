@@ -1,17 +1,23 @@
 import backend_config as config
 from communicate_outside import socket_sender
 from communicate_outside import shell
-
 import os
 import sys;sys.path.append(os.getcwd() + "/../")
 import TP_Frontend_Backend_Bridge
+from pymongo.mongo_client import MongoClient
+
+client = MongoClient("localhost",27017)
+db = client['noisy_NER']
+entity_collection = db['questions']
+synonym_collection = db['entity']
 
 
-
-def NER_plain_text():
+def NER_plain_text(flush):
     """
     Start ner process for processing catalogs.
     """
+    if flush:
+        flush_previous_data()
     NERProcess = shell.initializeCommandNetProcessor_to_ComputeHighPriorityTrainingQuestions()
     from collections import defaultdict
 
@@ -65,3 +71,14 @@ def NER_plain_text():
                           "frequency":len(surface_txt_and_entity_tuple_MENTIONED_IN[surface_txt_and_entity_tuple])
                           }}
         db.entity.update(query,update,upsert=True)
+
+def flush_previous_data():
+    synonym_collection.update({},{
+        "$unset":{
+            "mentioned_in":1, "disapproved_by_trainer":1,
+            "approved_by_trainer":1, "frequency":1,
+            "skipped_by_trainer":1 }
+        },
+    upsert = False, multi = True)
+    entity_collection.remove({})
+    return
