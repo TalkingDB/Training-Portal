@@ -16,8 +16,7 @@ def NER_plain_text(flush):
     """
     Start ner process for processing catalogs.
     """
-    if flush:
-        flush_previous_data()
+    flush_previous_data(flush)
     NERProcess = shell.initializeCommandNetProcessor_to_ComputeHighPriorityTrainingQuestions()
     from collections import defaultdict
 
@@ -53,7 +52,7 @@ def NER_plain_text(flush):
                 surface_txt_and_entity_tuple_MENTIONED_IN[surface_text_and_entity_tuple_as_KEY].append (location_of_mention)
             lineNumber = lineNumber + 1
             ner_input_line = f.readline()
-    
+
         f.close()
     NERProcess.kill()
 
@@ -71,14 +70,69 @@ def NER_plain_text(flush):
                           "frequency":len(surface_txt_and_entity_tuple_MENTIONED_IN[surface_txt_and_entity_tuple])
                           }}
         db.entity.update(query,update,upsert=True)
+    update_question_collection()
 
-def flush_previous_data():
-    synonym_collection.update({},{
-        "$unset":{
-            "mentioned_in":1, "disapproved_by_trainer":1,
-            "approved_by_trainer":1, "frequency":1,
-            "skipped_by_trainer":1 }
-        },
-    upsert = False, multi = True)
-    entity_collection.remove({})
+def flush_previous_data(flush):
+    if flush:
+        synonym_collection.update({},{
+            "$unset":{
+                "mentioned_in":1, "disapproved_by_trainer":1,
+                "approved_by_trainer":1, "frequency":1,
+                "skipped_by_trainer":1 }
+            },
+        upsert = False, multi = True)
+        entity_collection.remove({})
+    else:
+        synonym_collection.update({},{
+            "$unset":{
+                "mentioned_in":1, "frequency":1
+                }
+            },
+        upsert = False, multi = True)
     return
+
+def update_question_collection():
+    """
+
+    :return:
+    """
+    entity_collection.update({},{
+            "$unset":{"frequency":1}
+            },
+        upsert = False, multi = True)
+
+    questions = entity_collection.find({})
+
+    for question in questions:
+        if ">" in question['question']:
+            concept = "entity_url"
+        else:
+            concept = "surface_text"
+        frequency = get_frequency(concept, question['question'])
+        entity_collection.update({"question":question['question']},{
+            "$set":{"frequency":frequency}
+            },
+        upsert = False)
+
+def get_frequency(conceptType, entity):
+    """
+
+    :return:
+    """
+    data = synonym_collection.aggregate([
+        { "$match":{"intended_trainer":TP_Frontend_Backend_Bridge.projectName + "_trainer",
+                    conceptType:entity
+                    }
+         },
+        {
+            "$unwind": "$mentioned_in"
+        },
+        {"$group":
+         {      "_id": "$" + conceptType,
+                "freq": {
+                    "$sum": 1
+                }
+            }
+        }
+    ])
+    return data['result'][0]['freq']
