@@ -64,18 +64,18 @@ width:150px !important;
 <script>
     $(document).ready(function(){
         $("#question-gen-btn").on("click", function(){
-            $("#flush-data-modal").modal('show');
-            $("#flush-data-modal button").on('click', function(){
-                var flush = $(this).data("flush")
-                $("#flush-data-modal").modal('hide');
+            //$("#flush-data-modal").modal('show');
+            //$("#flush-data-modal button").on('click', function(){
+                //var flush = $(this).data("flush")
+                //$("#flush-data-modal").modal('hide');
                 $('#generate_ques_div').html('<h3>Question Generation in progress &nbsp; &nbsp;<img src="http://jalbum.net/en/resources/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/indicator.gif"></h3>');
-                $.post( "/generate-questions/",{"flush-data":flush}, function() {
+                $.post( "/generate-questions/",{"flush-data":"true"}, function() {
                 question_gen_process();
                 })
                 .fail(function() {
                     $("#messages-div").html('<div class="alert alert-danger text-center col-md-4 col-md-offset-4" role="alert">Error in Generating questions</div>');
                 });
-            });
+            //});
         });
     {% if question_gen_progress == True %}
         question_gen_process();
