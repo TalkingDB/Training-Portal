@@ -50,3 +50,18 @@ def NER_plain_text():
     
         f.close()
     NERProcess.kill()
+
+    """
+    Calculate frequency of entity and update in mongodb
+    """
+    from pymongo import MongoClient
+    client = MongoClient("127.0.0.1",27017)
+    db = client['noisy_NER']
+#     f = open('data/mongoDumpToSaveTaggedOutput.txt','wb')
+    for surface_txt_and_entity_tuple in surface_txt_and_entity_tuple_MENTIONED_IN.keys():
+        query = {"entity_url":"{0}".format(surface_txt_and_entity_tuple[0]) ,
+                          "surface_text":"{0}".format(surface_txt_and_entity_tuple[1].encode('utf-8'))}
+        update = {"$set":{"mentioned_in":surface_txt_and_entity_tuple_MENTIONED_IN[surface_txt_and_entity_tuple],
+                          "frequency":len(surface_txt_and_entity_tuple_MENTIONED_IN[surface_txt_and_entity_tuple])
+                          }}
+        db.entity.update(query,update,upsert=True)
