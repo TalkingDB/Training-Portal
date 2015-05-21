@@ -70,7 +70,8 @@ def NER_plain_text(flush):
                           "frequency":len(surface_txt_and_entity_tuple_MENTIONED_IN[surface_txt_and_entity_tuple])
                           }}
         db.entity.update(query,update,upsert=True)
-    update_question_collection()
+    if not flush:
+        update_question_collection()
 
 def flush_previous_data(flush):
     if flush:
