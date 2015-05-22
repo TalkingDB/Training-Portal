@@ -312,7 +312,11 @@ def mass_query_format(inputFile):
     spamreader = csv.reader(inputFile, delimiter=',')
     for i in spamreader:
         if len(i) > 0:
-            if "\n" in i[0]:
+            if "\r\n" in i[0]:
+                input_instruct.append(str(i[0].replace("\r\n", "~")))
+            elif "\r" in i[0]:
+                input_instruct.append(str(i[0].replace("\r", "~")))
+            elif "\n" in i[0]:
                 input_instruct.append(str(i[0].replace("\n", "~")))
             else:
                 input_instruct.append(str(i[0].strip()))
