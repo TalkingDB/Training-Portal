@@ -22,7 +22,7 @@ def upload(request):
             newdoc.save()
 
             # Redirect to the document list after POST
-            return redirect('/upload')
+            return redirect('/bulk-testing')
     else:
         form = DocumentForm() # A empty, unbound form
 
