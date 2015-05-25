@@ -36,7 +36,6 @@ def NER_plain_text(flush):
         lineNumber = 1
         
         while ner_input_line != '':
-            print ner_input_line
             if nerCache.has_key(ner_input_line):
                 nerDict = nerCache[ner_input_line]
             else:
