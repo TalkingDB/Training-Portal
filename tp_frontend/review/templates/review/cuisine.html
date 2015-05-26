@@ -3,7 +3,7 @@
 {% block title %}Select Cuisine{% endblock %}
 {% block content %}
 <p><b>{{ current_cuisines  }}</b></p>
-    <form action="/cuisine_selection/" method="post" enctype="multipart/form-data">
+    <form action="/cuisine_selection/" method="post" enctype="multipart/form-data" id="cuisine_selection_form">
         {% csrf_token %}
         <p>{{ form.non_field_errors }}</p>
         <p>Select {{ form.cuisine.label_tag }}(Select multiple using control or shift key)</p>
@@ -11,9 +11,10 @@
             {{ form.cuisine.errors }}
             {{ form.cuisine }}
         </p>
-        <p><input type="submit" value="Select" /></p>
+        <p><input type="submit"  class="btn btn-primary col-md-4" value="Select These Cuisines" /></p>
     </form>
-
+        <p><b>{{ current_cuisines  }}</b></p>
+        <p class="text-warning"><span class="glyphicon glyphicon-warning-sign text-danger" aria-hidden="true" style="font-size:14px;"></span>&nbsp;To See Changes in Mass Training csv and Training Portal Catalog Question for currently selected cuisines please click on Generate Questions</p>
     <div id="generate_ques_div" class="col-md-4">
          {% if question_gen_progress == True %}
             <h4>Question Generation in progress &nbsp; &nbsp;<img src="http://jalbum.net/en/resources/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/indicator.gif"></h4>

@@ -97,3 +97,10 @@ overflow: hidden;
 #associate-btn{
     margin-left: 10px;
 }
+
+#cuisine_selection_form{
+margin-bottom:70px;
+}
+#generate_ques_div{
+    padding: 0;
+}
