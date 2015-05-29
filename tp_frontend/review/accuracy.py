@@ -8,7 +8,7 @@ import re
 import time
 
 output_dir_path = os.path.expanduser("~/Smarter.Codes/src/TrainingPortal/tp_frontend/review/media/output/")
-url="http://foodweasel-live.smarter.codes:8001/recommendation/generate/"
+url="http://localhost:8001/recommendation/generate/"
 parent = '{"key": "uid","value":["72894", "81443", "70681", "30857", "52951", "73498", "70263", "68964", "29602", "79779", "65010", "68924", "46911", "75328", "79960", "38911", "74661", "71519", "70131", "69384"]}'
 headers = {'Content-type': 'application/json', 'Accept': '*/*', "Authorization": "Basic Zm9vZHdlYXNlbC5jb206Q2hhbmdlTWU="}
 client = requests.session()
