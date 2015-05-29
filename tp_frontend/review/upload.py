@@ -17,7 +17,8 @@ def upload(request):
             inputFile = request.FILES['docfile']
             query_type = form.cleaned_data['input_type']
             one_res_format = form.cleaned_data['only_1st_restaurant'] or False
-            outputFile = initialization(inputFile, query_type, one_res_format)
+            for_matching_algo = form.cleaned_data['for_matching_algo'] or False
+            outputFile = initialization(inputFile, query_type, one_res_format, for_matching_algo)
             newdoc = Document(docfile = request.FILES['docfile'], outfile = outputFile)
             newdoc.save()
 

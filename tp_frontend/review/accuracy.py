@@ -48,65 +48,82 @@ def commandProcessorHit(arg):
         print arg + ' is a unicode string'
     except Exception as e:
         print e
-def get_child_data(data):
+def get_child_data(data, matching):
     """
     """
     global instruct
     global i
+
+
     if data["type"] == "group" and "children" in data:
         for child in data["children"]:
-            get_child_data(child)
+            get_child_data(child, matching)
     elif data["type"] == "item" and "children" in data:
         #result[-1] = result[-1] + "Item = "+data["name"]+"\n"
         if data["instruction"] in item_dict:
-            if [item for item in item_dict[data["instruction"]] if "\t" +data["name"] in item]:
+            if [item for item in item_dict[data["instruction"]] if "\t"+"Item = " +data["name"] in item]:
                 i = i+1
-                print data["name"]+"-"+str(i)
                 instruct = data["name"]+"-"+str(i)
             else:
                 instruct = data["name"]
-            if "." in instruct:
-                item_name = instruct.split(".")
-                if len(item_name[0]) < 4 and item_name[0] != "Dr":
-                    instruct = item_name[1].strip()
+            if matching:
+                if "." in instruct:
+                    item_name = instruct.split(".")
+                    if len(item_name[0]) < 4 and item_name[0] != "Dr":
+                        instruct = item_name[1].strip()
             if len(data['warning']) > 0:
-            #     for key, val in data["warning"].iteritems():
-            #         item_dict[data["instruction"]].append(("\t" +instruct+"\n\t"+key+" : "+val,data["score"]))
-                pass
+                if matching:
+                    item_dict[data["instruction"]].append((instruct,data["score"]))
+                else:
+                    for key, val in data["warning"].iteritems():
+                        item_dict[data["instruction"]].append(("\t"+"Item = " +instruct+"\n\t"+key+" : "+val,data["score"]))
             else:
-                item_dict[data["instruction"]].append(("\t" +instruct,data["score"]))
+                if matching:
+                    item_dict[data["instruction"]].append(("\t" +instruct,data["score"]))
+                else:
+                    item_dict[data["instruction"]].append(("\t"+"Item = " +instruct,data["score"]))
         else:
             instruct = data["name"]
             if len(data['warning']) > 0:
-                # for key, val in data["warning"].iteritems():
-                #     item_dict[data["instruction"]] = [(data["instruction"]+"\n"+"\t"+instruct+"\n\t"+key+" : "+val,data["score"])]
-                pass
+                if matching:
+                    item_dict[data["instruction"]] = [(instruct,data["score"])]
+                else:
+                    for key, val in data["warning"].iteritems():
+                        item_dict[data["instruction"]] = [(data["instruction"]+"\n"+"\t"+"Item = " +instruct+"\n\t"+key+" : "+val,data["score"])]
             else:
-
-                if "." in data["name"]:
-                    item_name = data["name"].split(".")
-                    if len(item_name[0]) < 4 and item_name[0] != "Dr":
-                        data["name"] = item_name[1].strip()
-                item_dict[data["instruction"]] = [(data["name"],data["score"])]
+                if matching:
+                    if "." in data["name"]:
+                        item_name = data["name"].split(".")
+                        if len(item_name[0]) < 4 and item_name[0] != "Dr":
+                            data["name"] = item_name[1].strip()
+                    item_dict[data["instruction"]] = [(data["name"],data["score"])]
+                else:
+                    item_dict[data["instruction"]] = [(data["instruction"]+"\n"+"\t"+"Item = " +data["name"],data["score"])]
         #item_dict["Item = " +data["name"]] = data["score"]
             #= result[-1] + key+" : "+value+"\n"
         for child in data["children"]:
-            get_child_data(child)
+            get_child_data(child, matching)
     elif data["type"] == "option_group" and "children" in data:
         for child in data["children"]:
-            get_child_data(child)
+            get_child_data(child, matching)
     elif data["type"] == "option":
         if data["selected"] == 1:
             if instruct:
                 if instruct in option_dict:
-                    option_dict[instruct] = option_dict[instruct] + "\n\t"+data["name"]+"\n"
+                    if matching:
+                        option_dict[instruct] = option_dict[instruct] + "\n\t"+data["name"]+"\n"
+                    else:
+                        option_dict[instruct] = option_dict[instruct] + "\n\toption = "+data["name"]+"\n"
                 else:
-                    option_dict[instruct] = ("\n\t"+data["name"]+"\n")
+                    if matching:
+                        option_dict[instruct] = ("\n\t"+data["name"]+"\n")
+                    else:
+                        option_dict[instruct] = ("\n\toption = "+data["name"]+"\n")
         if "children" in data:
             for child in data["children"]:
-                get_child_data(child)
+                get_child_data(child, matching)
 
-def get_recommendation_only_1st(instruction,  only_1st, writer):
+def get_recommendation_only_1st(instruction,  only_1st, writer, matching):
     """
     """
     global item_dict
@@ -126,7 +143,7 @@ def get_recommendation_only_1st(instruction,  only_1st, writer):
                     rest_parsed =  rest_parsed+1
                     if data["type"] == "parent_group":
                         for child in data["children"]:
-                            get_child_data(child)
+                            get_child_data(child, matching)
                         item_result = ""
                         new = item_dict
                         for key, val in new.iteritems():
@@ -144,9 +161,10 @@ def get_recommendation_only_1st(instruction,  only_1st, writer):
                                 if score > max_score:
                                     max_score = score
                                     best_item = d[0]
-                            if "Item = " in best_item:
-                                sep = 'Item = '
-                                best_item = best_item.split(sep, 1)[1]
+                            if not matching:
+                                if "Item = " in best_item:
+                                    sep = 'Item = '
+                                    best_item = best_item.split(sep, 1)[1]
                             result.append(best_item)
                             for key, val in option_dict.iteritems():
                                 if key in best_item:
@@ -155,13 +173,15 @@ def get_recommendation_only_1st(instruction,  only_1st, writer):
                                     options_found = 1
                             if options_found == 0:
                                 result.append("No Options")
-                            result.append(data["name"]+"\n"+data["properties"]['complete'])
-                            if result[1] == "soda":
-                                result[1] = result[2]
+                            if matching:
+                                result.append(data["name"]+"\n"+data["properties"]['complete'])
+                                if "soda" in result[1]:
+                                    result[1] = result[2]
+                            else:
+                                result.append("Resturant = "+data["name"]+"\nResturant-url = "+data["properties"]['complete'])
                             writer.writerow(result)
-                    # if len(data["not_found"]) > 0:
-                    #     pass
-                    #     # print_notfound(data["not_found"], writer)
+                    if len(data["not_found"]) > 0:
+                        print_notfound(data["not_found"], writer)
         else:
             no_result = [instruction]
             for x in range(0, 3):
@@ -179,7 +199,7 @@ def print_notfound(data, writer):
     writer.writerow(result)
 
 
-def get_recommendation(instruction, writer):
+def get_recommendation(instruction, writer, matching):
     """
     """
     global item_dict
@@ -190,7 +210,6 @@ def get_recommendation(instruction, writer):
         r = requests.post(url, data=json.dumps({"parent":parent, "instruction":instruction.strip()}), headers=headers)
         text =  json.loads(r.text)
         rest_parsed = 0
-        print text
         if len(text["data"]) > 0:
             for data in text["data"]:
                 item_dict = {}
@@ -198,14 +217,17 @@ def get_recommendation(instruction, writer):
                 i = 0
                 if rest_parsed < 3:
                     rest_parsed =  rest_parsed+1
-                    result.append(data["name"]+"\n"+data["properties"]['complete']+"\n")
+                    if matching:
+                        result.append(data["name"]+"\n"+data["properties"]['complete']+"\n")
+                    else:
+                        result.append("Resturant = "+data["name"]+"\nResturant-url = "+data["properties"]['complete']+"\n")
                     if len(data["not_found"]) > 0:
                          for item in data["not_found"]:
                             result.append(item)
                             result.append(" Not Found\ n")
                     if data["type"] == "parent_group":
                         for child in data["children"]:
-                            get_child_data(child)
+                            get_child_data(child, matching)
                         item_result = ""
                         new = item_dict
 
@@ -222,12 +244,11 @@ def get_recommendation(instruction, writer):
             for x in range(0, diff):
                 result.append("")
         else:
-            print "coming here"
             for x in range(0, 3):
                 result.append("No Recommendations")
 
 
-def initialization(inputFile, type, only_1st):
+def initialization(inputFile, type, only_1st, matching):
     """
     Start process of creating a csv.
 
@@ -266,9 +287,9 @@ def initialization(inputFile, type, only_1st):
             result = []
             if instruction:
                 if(only_1st):
-                    get_recommendation_only_1st(instruction, only_1st, writer)
+                    get_recommendation_only_1st(instruction, only_1st, writer, matching)
                 else:
-                    get_recommendation(instruction, writer)
+                    get_recommendation(instruction, writer, matching)
                     writer.writerow(result)
                 # exit()
                 # if only_1st:

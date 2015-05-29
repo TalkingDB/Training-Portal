@@ -11,6 +11,7 @@ class DocumentForm(forms.Form):
     )
     input_type = forms.ChoiceField(choices=CHOICES, widget=forms.RadioSelect(), initial="mass_input", required=True)
     only_1st_restaurant= forms.BooleanField(required=False)
+    for_matching_algo= forms.BooleanField(required=False)
 
 
     def clean_docfile(self):
