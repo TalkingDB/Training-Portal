@@ -6,11 +6,11 @@ import csv
 import socket
 import re
 import time
-
+import urllib
 output_dir_path = os.path.expanduser("~/Smarter.Codes/src/TrainingPortal/tp_frontend/review/media/output/")
-url="http://localhost:8001/recommendation/generate/"
+url="http://localhost/"
 parent = '{"key": "uid","value":["72894", "81443", "70681", "30857", "52951", "73498", "70263", "68964", "29602", "79779", "65010", "68924", "46911", "75328", "79960", "38911", "74661", "71519", "70131", "69384"]}'
-headers = {'Content-type': 'application/json', 'Accept': '*/*', "Authorization": "Basic Zm9vZHdlYXNlbC5jb206Q2hhbmdlTWU="}
+headers = {"Content-type": "application/x-www-form-urlencoded","Accept": "text/plain"}
 client = requests.session()
 item_dict = {}
 option_dict = {}
@@ -129,8 +129,9 @@ def get_recommendation_only_1st(instruction,  only_1st, writer, matching):
     global item_dict
     global option_dict
     global i
+    params = urllib.urlencode({'parent': parent, 'instruction': instruction.strip()})
     if instruction:
-        r = requests.post(url, data=json.dumps({"parent":parent, "instruction":instruction.strip()}), headers=headers)
+        r = requests.post(url, params=params, headers=headers)
         text =  json.loads(r.text)
         rest_parsed = 0
         total_rest = 1#total number of restaurants
@@ -205,9 +206,11 @@ def get_recommendation(instruction, writer, matching):
     global item_dict
     global option_dict
     global i
+    params = urllib.urlencode({'parent': parent, 'instruction': instruction.strip()})
     if instruction:
         result.append(instruction)
-        r = requests.post(url, data=json.dumps({"parent":parent, "instruction":instruction.strip()}), headers=headers)
+        r = requests.post(url, params=params, headers=headers)
+        
         text =  json.loads(r.text)
         rest_parsed = 0
         if len(text["data"]) > 0:
