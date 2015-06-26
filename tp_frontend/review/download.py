@@ -120,6 +120,7 @@ def mass_training(request):
                 if "frequency" in synonym:
                     frequency = str(synonym["frequency"])
                 training_data.append({
+		    "id" : synonym["_id"],
                     "frequency": data["freq"],
                     "entity": entity.encode('utf8'),
                     "synonym": synonym["surface_text"].encode('utf8') + " (" +frequency+")"
@@ -127,10 +128,10 @@ def mass_training(request):
     def data():
         csvfile = StringIO.StringIO()
         csvwriter = csv.writer(csvfile)
-        csvwriter.writerow(["frequency","entity","synonym (frequency)"])
+        csvwriter.writerow(["id", "frequency","entity","synonym (frequency)"])
         for data in training_data:
             try:
-                csvwriter.writerow([data["frequency"],data["entity"], data["synonym"]])
+                csvwriter.writerow([data["id"], data["frequency"],data["entity"], data["synonym"]])
             except Exception as e:
                 print e
                 print data
