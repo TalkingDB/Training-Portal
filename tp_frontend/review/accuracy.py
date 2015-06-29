@@ -171,7 +171,7 @@ def get_recommendation_only_1st(instruction,  only_1st, writer, matching):
                                 if "Item = " in best_item:
                                     sep = 'Item = '
                                     best_item = best_item.split(sep, 1)[1]
-                            result.append(best_item)
+                            result.append(best_item.encode("utf-8"))
                             for key, val in option_dict.iteritems():
                                 if key in best_item:
                                     val = val.strip()
@@ -185,7 +185,7 @@ def get_recommendation_only_1st(instruction,  only_1st, writer, matching):
                                     result[1] = result[2]
                             else:
                                 result.append("Resturant = "+data["name"]+"\nResturant-url = "+data["properties"]['complete'])
-                            writer.writerow(result)
+			    writer.writerow(result)
                     if len(data["not_found"]) > 0:
                         print_notfound(data["not_found"], writer)
         else:
