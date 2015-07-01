@@ -137,10 +137,13 @@ def get_recommendation_only_1st(instruction,  only_1st, writer, matching):
 	try:
             text =  json.loads(r.text)
 	except:
-	    print (r.text)
+	    text = {}
+	    f = open("error.txt", "a")
+	    f.write(instruction + "\n")
+	    f.close() 
         rest_parsed = 0
         total_rest = 1#total number of restaurants
-        if len(text["data"]) > 0:
+        if "data" in text and len(text["data"]) > 0:
             for data in text["data"]:
                 item_dict = {}
                 option_dict = {}
