@@ -15,7 +15,7 @@ def upload(request):
         form = DocumentForm(request.POST, request.FILES)
         if form.is_valid():
             inputFile = request.FILES['docfile']
-            query_type = form.cleaned_data['input_type']
+            query_type = "mass_input"
             one_res_format = form.cleaned_data['only_1st_restaurant'] or False
             for_matching_algo = form.cleaned_data['for_matching_algo'] or False
             outputFile = initialization(inputFile, query_type, one_res_format, for_matching_algo)
