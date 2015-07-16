@@ -28,6 +28,8 @@ global_node_id_increment = 0
 #  command_url
 #  operation
 #  node_id
+
+Entity_to_Command_collection = db['Entity_to_Command']
 command_meta_data_collection = db['command_meta_data']
 
 #Pseudocode 
@@ -188,6 +190,18 @@ setter_template = f.read()
 setter_template.replace("$Project", TP_Frontend_Backend_Bridge.projectName)
 p.write(setter_template)
 MongoCLI.mongo_query("noisy_NER", "entity", "data/mongoDB_Intended_Trainer_Setting.json")
+MongoCLI.mongo_query("noisy_NER", "Entity_to_Command", "data/Entity_to_Command.json")
+MongoCLI.mongo_query("noisy_NER", "command_meta_data", "data/command_meta_data.json")
+unique_enities_with_noun =   synonym_collection.aggregate([
+        {"$group":
+        {      "_id": "$entity_url",
+        }
+        }])
+for entity in unique_enities_with_noun["result"]:
+    entity_url = entity['_id']
+    global_id_increment = global_id_increment+1      
+    entity_to_command_row_from_entity_collection = {"command":"CommandNet>Noun","entity_url":entity_url,}
+    Entity_to_Command_collection.insert(enitity_part_of_speech_entity_url_unique_id_row)
 
 t2 = time.time()
 print "mongo flushing & importing took " + str(t2-t1) + " seconds"
