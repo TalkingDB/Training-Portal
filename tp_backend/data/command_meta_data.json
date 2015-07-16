@@ -1,0 +1,14 @@
+{"_id":{"$oid":"55a6a04e71b9b54376a2bec7"},"command_url":"CommandNet\u003eFind","node_id":1,"operation":"ADDITIVE"}
+{"_id":{"$oid":"55a6a04e71b9b54376a2bec8"},"command_url":"CommonSense\u003eIgnoreToken","node_id":2,"operation":"ADDITIVE"}
+{"_id":{"$oid":"55a6a04e71b9b54376a2bec9"},"command_url":"CommandNet\u003eNewInstruction","node_id":3,"operation":"ADDITIVE"}
+{"_id":{"$oid":"55a6a04e71b9b54376a2beca"},"command_url":"CommandNet\u003eMoreObjectInSubject","node_id":4,"operation":"ADDITIVE"}
+{"_id":{"$oid":"55a6a04e71b9b54376a2becb"},"command_url":"CommandNet\u003eNewInstructionOfNouns","node_id":5,"operation":"ADDITIVE"}
+{"_id":{"$oid":"55a6a04e71b9b54376a2becc"},"command_url":"CommandNet\u003eAlongWith","node_id":6,"operation":"ADDITIVE"}
+{"_id":{"$oid":"55a6a04e71b9b54376a2becd"},"command_url":"DBPedia\u003eUnits_of_measurement","node_id":7,"operation":"ADDITIVE"}
+{"_id":{"$oid":"55a6a04e71b9b54376a2bece"},"command_url":"CommandNet\u003eVagueSizeOf","node_id":8,"operation":"ADDITIVE"}
+{"_id":{"$oid":"55a6a04e71b9b54376a2becf"},"command_url":"CommandNet\u003eUnitOfMeasurement","node_id":9,"operation":"ADDITIVE"}
+{"_id":{"$oid":"55a6a04e71b9b54376a2bed0"},"command_url":"CommandNet\u003eNoun","node_id":10,"operation":"ADDITIVE"}
+{"_id":{"$oid":"55a6a04e71b9b54376a2bed1"},"command_url":"CommandNet\u003eRemoveX","node_id":11,"operation":"ADDITIVE"}
+{"_id":{"$oid":"55a6a04e71b9b54376a2bed2"},"command_url":"CommandNet\u003eContainer","node_id":12,"operation":"ADDITIVE"}
+{"_id":{"$oid":"55a6a04e71b9b54376a2bed3"},"command_url":"CommonSense\u003eOf","node_id":13,"operation":"ADDITIVE"}
+{"_id":{"$oid":"55a6a04e71b9b54376a2bed4"},"command_url":"CommandNet\u003eUnitsOfX","node_id":14,"operation":"ADDITIVE"}
