@@ -71,7 +71,8 @@ def dropTables():
     MongoCLI.mongo_collection_drop("noisy_NER", "entity")
     MongoCLI.mongo_collection_drop("noisy_NER", "Entity_to_Command")
     MongoCLI.mongo_collection_drop("noisy_NER", "entity_meta_data")
-
+    MongoCLI.mongo_collection_drop("noisy_NER", "command_meta_data")
+    
 def insertVariableIntoMongoDb(variable, entity_part_of_speech):
     f = open("data/mongoDumpFromConceptDigger.txt", "wb")
     f.write(variable)
@@ -105,7 +106,7 @@ def set_categories_and_make_request_to_concept_digger():
 
 #Seed Dummy Categories for concept Digger 
     allCommonNounSeedCategories = '[["Category:Food",1,1,0]]'
-    allAttributiveSeedCategories = '[["Category:shoe_Brand",1,1,0]'
+    allAttributiveSeedCategories = '[["Category:Brand",1,1,0]'
     allProperNounSeedCategories = '[["Category:Color", 1,1,0]]'
 
     """
@@ -213,7 +214,6 @@ def insertEntity_to_command_and_command_meta_data():
 #TODO: Later we will store PartofSpeech of entity inside this Entity_to_Command Collection
     for entity in unique_enities_with_noun["result"]:
         entity_url = entity['_id']
-        global_id_increment = global_id_increment + 1      
         entity_to_command_row_from_entity_collection = {"command":"CommandNet>Noun", "entity_url":entity_url,}
         Entity_to_Command_collection.insert(enitity_part_of_speech_entity_url_unique_id_row)
 """
