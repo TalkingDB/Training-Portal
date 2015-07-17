@@ -303,9 +303,10 @@ def NER_plain_text():
     # f.close()
     # MongoCLI.mongo_import("noisy_NER", "entity", '"' + os.getcwd() + '/data/mongoDumpToSaveTaggedOutput.txt"','--upsertFields "entity_url,surface_text"')
 set_categories_and_make_request_to_concept_digger()
+insertEntity_to_command_and_command_meta_data()
 insert_commonsense_training_data() 
 set_intented_trainer_of_no_tag_project()
-insertEntity_to_command_and_command_meta_data()
+
 
 
 
