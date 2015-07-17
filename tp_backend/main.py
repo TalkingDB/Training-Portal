@@ -301,8 +301,6 @@ insert_commonsense_training_data()
 set_intented_trainer_of_no_tag_project()
 insertEntity_to_command_and_command_meta_data()
 
-t2 = time.time()
-print "mongo flushing & importing took " + str(t2-t1) + " seconds"
 
 
 #start_command_net_processor()
