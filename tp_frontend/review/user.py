@@ -8,7 +8,6 @@ from pymongo import MongoClient
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import questions_n_answers as question_list
 from progress import get_progress
-from retrain import retraining
 import json
 
 import os

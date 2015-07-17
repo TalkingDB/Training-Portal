@@ -45,7 +45,7 @@ def getNextQuestion(username):
 def getNextHighestPriorityConcept(username,conceptType):
     mongoReply = entity_collection.aggregate([
         { "$match":{"intended_trainer":TP_Frontend_Backend_Bridge.projectName + "_trainer",
-            "approved_by_trainer" :{"$nin": [username]},
+            "approved_by_trainer" :{"$nin": [username], "$exists":"true"},
             "skipped_by_trainer" :{"$nin": [username]},
             "disapproved_by_trainer" :{"$nin": [username]} }
          },                 

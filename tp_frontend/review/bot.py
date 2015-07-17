@@ -55,6 +55,7 @@ def start_training(request):
 
     #Get data from mongodb
     data = mongoquery(user.id, "entity_url")
+#   if a special character like SODA(32) it only matches soda 
     is_spcl_char_entity = False
     #process mongodata
     for entity in data['result']:
@@ -90,15 +91,18 @@ def start_training(request):
             # We will check this variable so we can know that plural_synonym exists in our list
             # of synonyms. If It is set to True that means synonym with same text exist else we have to add new text
             is_plural_synonym = False
+            
 
 
             for synonym in synonyms:
+                synonym_to_be_deleted = False
                 # Condition 1: source of synonym should be article_categories_en.nt
                 # It is because we observed suggestion names of article_categories_en.nt are same as question
                 # DBPedia>Diet_coke : diet coke
 
                 if 'how_this_record' in synonym and synonym['how_this_record'] == "article_categories_en.nt":
                     # Condition 1 true so Add user id to list of approved trainers
+                    synonym_to_be_deleted = True
                     entityModel.update(
                         {"_id": synonym["_id"]},
                         {"$addToSet": {"approved_by_trainer":user.id}}
@@ -109,7 +113,7 @@ def start_training(request):
 
                     # If this condition is true we will not add new synonym so change value of "is_plural_synonym" to True
                     is_plural_synonym = True
-
+                    synonym_to_be_deleted = True
                     entityModel.update(
                         {"_id": synonym["_id"]},
                         {"$addToSet": {"approved_by_trainer":user.id}}
@@ -130,7 +134,9 @@ def start_training(request):
                         {"_id": synonym["_id"]},
                         {"$addToSet": {"disapproved_by_trainer":user.id}}
                     )
-
+                if synonym_to_be_deleted == True:
+                    entityModel.remove({"surface_text":synonym['surface_text'],"entity_url":{"$not":{"$eq" : synonym['entity_url']}}})
+                    
             # Add a new synonym if synonym matching test 0f plural_synonym dose not exist.
             if not is_plural_synonym:
                 entityModel.insert({
@@ -142,7 +148,9 @@ def start_training(request):
                         "intended_trainer" : t.projectName+"_trainer",
 
                      })
-
+            
+                
+                
             # enter questions in questions collection for progress and display of answered questions
             if questionModel.find({"question": entity["_id"]}).count():
                 # if question exist add user id in list of trainers

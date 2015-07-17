@@ -1,5 +1,4 @@
 from pymongo.mongo_client import MongoClient
-import entity_model as em
 
 client = MongoClient("localhost",27017)
 #client.noisy_NER.authenticate("fwadmin", "fwadmin")

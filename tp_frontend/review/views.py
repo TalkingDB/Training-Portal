@@ -114,8 +114,8 @@ def index(request, resource=None):
                 'trainers': trainers,
              #   'source': entity.how_this_record
             }
-
-            total_frequency += frequency
+            if "approved_by_trainer" in entity:
+                total_frequency += frequency
         synonyms = sorted(entity_synonyms.items(),key=lambda x: x[1]['frequency'],reverse=True)
         #sorted_dict = {[synonym] for synonym in synonyms}
         sorted_list = []
