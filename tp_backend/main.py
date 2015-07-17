@@ -310,5 +310,5 @@ set_intented_trainer_of_no_tag_project()
 
 
 
-#start_command_net_processor()
-#NER_plain_text()
+start_command_net_processor()
+NER_plain_text()
