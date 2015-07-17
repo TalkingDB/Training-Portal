@@ -79,8 +79,12 @@ def insertVariableIntoMongoDb(variable, entity_part_of_speech):
     """
     Forward entities, their surface_text to Noisy NER
     """
-    import os
-    MongoCLI.mongo_import("noisy_NER", "entity", os.getcwd() + "/data/mongoDumpFromConceptDigger.txt")
+    try:
+        import os
+        MongoCLI.mongo_import("noisy_NER", "entity", os.getcwd() + "/data/mongoDumpFromConceptDigger.txt")
+    except Exception as e:
+        print e
+        sys.exit()
     f.close()
     if entity_part_of_speech:
         global_id_increment = 0
