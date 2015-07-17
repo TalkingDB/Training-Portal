@@ -214,7 +214,7 @@ def insertEntity_to_command_and_command_meta_data():
 #TODO: Later we will store PartofSpeech of entity inside this Entity_to_Command Collection
     for entity in unique_enities_with_noun["result"]:
         entity_url = entity['_id']
-        entity_to_command_row_from_entity_collection = {"command":"CommandNet>Noun", "entity_url":entity_url,}
+        entity_to_command_row_from_entity_collection = {"command":"CommandNet>Noun", "entity_url":entity_url}
         Entity_to_Command_collection.insert(entity_to_command_row_from_entity_collection)
 """
 Start noisy NER process
