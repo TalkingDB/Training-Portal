@@ -226,7 +226,7 @@ Start noisy NER process
 #TODO: soon we must call only NER, not the CP. Because CP takes more time for processing than NER
 #try:
 def start_command_net_processor():
-    NERProcess = shell.initializeCommandNetProcessor_to_ComputeHighPriorityTrainingQuestions()
+    return shell.initializeCommandNetProcessor_to_ComputeHighPriorityTrainingQuestions()
 
 #except Exception as e:
 #    print "CP couldn't be initialized!"
@@ -248,7 +248,7 @@ concatinate plain text from catalog with plain text of search text
 loop plain text input to NER
 """
 # @profile
-def NER_plain_text():
+def NER_plain_text(NERProcess):
     from collections import defaultdict
     surface_txt_and_entity_tuple_MENTIONED_IN = defaultdict(list)
 
@@ -314,5 +314,5 @@ set_intented_trainer_of_no_tag_project()
 
 
 
-start_command_net_processor()
-NER_plain_text()
+NERProcess = start_command_net_processor()
+NER_plain_text(NERProcess)
