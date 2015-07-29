@@ -78,7 +78,7 @@ def associate_entity(request):
     new = request.POST["new"]
     if new == "true":
         entity = entity.strip().replace(" ", "_").capitalize()
-        if list(entityModel.find({"entity_url": "DBPedia>"+entity})) or list(entityModel.find({"entity_url": "DBPedia>"+entity.title()})) \
+        if list(entityModel.find({"entity_url": {"$regex" :"DBPedia>"+entity+"$" ,"$options": "-i"}})) \
             or list(entityModel.find({"entity_url": "SmarterCodes>"+entity})):
             url = "reload"
             messages.error(request,"Entity with name "+entity+ " already exist! Please select from list of search options!")

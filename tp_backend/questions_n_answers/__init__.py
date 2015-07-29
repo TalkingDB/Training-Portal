@@ -1,4 +1,5 @@
 import pymongo
+import re
 from pymongo.mongo_client import MongoClient
 from bson.objectid import ObjectId
 
@@ -66,7 +67,9 @@ def getNextHighestPriorityConcept(username,conceptType):
     return ((entity_url,frequency)) #this returns a TUPLE. first element is entity_url, and 2nd element is sum of all mentioned_in
 
 def getQuestion(question,conceptType):
-    if conceptType == 'entity_url': mongo_query = { "entity_url": question}
+    print question
+    if conceptType == 'entity_url': mongo_query = { "entity_url": {"$regex" :question+"$" ,"$options": "-i"}}
+    print mongo_query
     if conceptType == 'surface_text': mongo_query = { "surface_text": question}
     mongo_filter = { "mentioned_in": {"$slice": 5}}
     mongoCursor = entity_collection.find(mongo_query,mongo_filter)
