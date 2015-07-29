@@ -81,7 +81,7 @@ def index(request, resource=None):
         return render(request, 'review/index.html', to_send)
     if entities:
         if ques[2] == 'entity_url':
-            entity_text = entities[0]['entity_url'].split('>')[1]
+            entity_text = entities[0]['entity_url']
             synonym_type = 'surface_text'
         else:
             entity_text = ques[0]
@@ -140,7 +140,7 @@ def index(request, resource=None):
 @login_required()
 def save(request, entity):
 
-    entity_url = "DBPedia>"+entity
+    entity_url = entity.replace("&gt;", ">")
     entityModel = em.EntityModel(db, collection)
     if request.method == "GET" or not entity:
         raise Http404
