@@ -186,6 +186,7 @@ def save(request, entity):
             surface_text = value.strip().lower()
             if surface_text:
                 no_tags = list(entity_collection.find({"entity_url": "~NoTag", "surface_text": surface_text}))
+                surface_text_already_exists = list(entity_collection.find({"surface_text": surface_text}))
                 if no_tags:
                     for tag in no_tags:
                         print tag["_id"]
@@ -194,15 +195,22 @@ def save(request, entity):
                             {"$set": { 'entity_url': entity_url, "approved_by_trainer": [request.user.id]}}
                         )
                 else:
-                    docs.append({
-                        'surface_text': surface_text,
-                        'entity_url':entity_url,
-                        'approved_by_trainer': [request.user.id],
-                        'frequency': frequency,
-                        "how_this_record": 'user_defined',
-                        "intended_trainer" : t.projectName+"_trainer",
+                    if surface_text_already_exists:
+                        for surface_text in surface_text_already_exists:
+                            entity_collection.update(
+                                {"_id": surface_text["_id"]},
+                                {"$set": { 'entity_url': entity_url, "approved_by_trainer": [request.user.id]}}
+                            )
+                    else:
+                        docs.append({
+                            'surface_text': surface_text,
+                            'entity_url':entity_url,
+                            'approved_by_trainer': [request.user.id],
+                            'frequency': frequency,
+                            "how_this_record": 'user_defined',
+                            "intended_trainer" : t.projectName+"_trainer",
 
-                     })
+                         })
         if docs:
             entityModel.insert_many(docs)
     if question:
