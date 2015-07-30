@@ -120,7 +120,6 @@
             <div class="col-md-12">
                 {% if concept_type == "entity_url" %}
 
-
                 <div class="panel panel-info">
               <div class="panel-heading">
               <div class="row"><span class="col-md-4">Associace <b>{{ text|removeprefix }}</b> with entiny :</span><span class="col-md-4"> <input type="text" class="form-control col-md-3" id="no-tag-entities"></span>
@@ -319,23 +318,25 @@
         {% endif %}
         var typingTimer;                //timer identifier
         var doneTypingInterval = 10000;  //time in ms, 4 second
-
+        var prev_value = "";
         //on keyup, start the countdown
         $("#no-tag-entities").keyup(function(){
             clearTimeout(typingTimer);
             var $this = $(this);
-            if($this.val().length > 2){
-                typingTimer = setTimeout(doneTyping($(this)), doneTypingInterval);
-            }else{
-                $(".show-result-entities").append("<p>No results found.</p>");
-                $("#associate-btn").addClass("hidden");
-                $("#add_new_entity").addClass("hidden");
+            if($this.val() != prev_value){
+                if($this.val().length > 2){
+                    prev_value = $(this).val();
+                    typingTimer = setTimeout(doneTyping($(this)), doneTypingInterval);
+                }else{
+                    $(".show-result-entities").append("<p>No results found.</p>");
+                    $("#associate-btn").addClass("hidden");
+                    $("#add_new_entity").addClass("hidden");
+                }
             }
         });
 
         //on keydown, clear the countdown
         $("#no-tag-entities").keydown(function(){
-            $(".show-result-entities").empty();
             clearTimeout(typingTimer);
         });
 
@@ -352,6 +353,7 @@
                   url: '/no-tags?data='+val,
             }).success(function(data){
                 if (data.length > 2){
+                     $(".show-result-entities").empty();
                      $.each(eval(data.replace(/[\r\n]/, "")), function(i, item) {
                         if (item.entity_url.indexOf("DBPedia") >= 0 || item.entity_url.indexOf("SmarterCodes") >= 0){
                             var entity_url = removePrefix(item.entity_url);
