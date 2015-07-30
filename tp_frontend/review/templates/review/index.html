@@ -337,6 +337,11 @@
 
         //on keydown, clear the countdown
         $("#no-tag-entities").keydown(function(){
+            var $this = $(this);
+            if($this.val() != prev_value){
+                $(".show-result-entities").empty();
+                prev_value = $(this).val();
+            }
             clearTimeout(typingTimer);
         });
 
