@@ -124,6 +124,12 @@ def index(request, resource=None):
             sorted_list.append({synonym[0]:synonym[1]})
 
         progress = get_progress([request.user.id])
+
+        hyponyms = []
+        parents = []
+        if ques[2] == "entity_url":
+            hyponyms = list(entity_relation.find({"subject": entity_text, "relation": "isHyponymOf"}))
+            parents = list(entity_relation.find({"object": entity_text, "relation": "isHyponymOf"}))
         return render(request, 'review/index.html', {
                 'entity': entity_text,
                 'text': (' ').join(entity_text.split('_')),
@@ -131,6 +137,8 @@ def index(request, resource=None):
                 'frequency':total_frequency,
                 'concept_type': ques[2],
                 'question': ques[0],'skipped_by': list(set(skipped_by)),
+                "hyponyms": hyponyms,
+                "parents": parents,
                 'progress': progress
         })
     else:

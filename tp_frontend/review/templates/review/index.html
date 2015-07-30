@@ -132,7 +132,35 @@
                </div>
                </div>
 
+                <div class="panel panel-info">
+              <div class="panel-heading"><p>Hyponyms</p></div>
+              <div class="panel-body show-result-entities">
+              <div class="col-md-12">
+                <div class="col-md-6" style="border-right: 1px dashed grey">
+                   
+                    {% if parents %}
+                        {% for parent in parents %}
+                            <p>{{ parent.subject }}  {{parent.relation}}   {{ parent.object }}</p>
+                        {% endfor %}
+                    {% else %}
+                        <p>No Result</p>
+                    {% endif %}
 
+                </div>
+                   <div class="col-md-6">
+
+                    {% if hyponyms %}
+                        {% for hyponym in hyponyms %}
+                            <p class="pull-right"><b>{{ hyponym.subject }}</b>&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-muted" >{{hyponym.relation}}</span>&nbsp;&nbsp;&nbsp;&nbsp;<b>{{ hyponym.object }}</b></p>
+                        {% endfor %}
+                    {% else %}
+                        <p>No Result</p>
+                    {% endif %}
+
+                </div>
+               </div>
+               </div>
+               </div>
 
 
 
