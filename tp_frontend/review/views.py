@@ -27,6 +27,7 @@ client = MongoClient(mongoUrl, mongoPort)
 db = client[mongoDb]
 questionModel = em.EntityModel(db, 'questions')
 entity_collection = db['entity']
+entity_relation = db["entity_relation"]
 
 file_path = os.path.expanduser("~/Smarter.Codes/customer_files/foodweasel.com/Training_Portal/")
 
@@ -338,3 +339,23 @@ def get_details_by_id(request, query_string, entity_id):
     if entity and entity[query_string]:
         return HttpResponse(entity[query_string].replace('_', ' '))
     return HttpResponse("Not able to find source")
+
+
+@csrf_exempt
+@login_required
+def merge_entities(request):
+    """
+    :param request:
+    :return:
+    """
+    to_merge = request.POST.getlist('to_merge[]')
+    merge_into = request.POST.getlist('merge_into')[0].replace("&gt;", ">")
+    for entity in to_merge:
+        entity_collection.update({ "entity_url": {"$regex" :entity+"$" ,"$options": "-i"}}, {"$set": {"entity_url": merge_into}}, multi=True)
+        entity_relation.update({ "subject": {"$regex" :entity+"$" ,"$options": "-i"}},  {"$set": {"subject": merge_into}}, multi=True)
+        entity_relation.update({ "object": {"$regex" :entity+"$" ,"$options": "-i"}},  {"$set": {"object": merge_into}}, multi=True)
+
+        # Remove if subject and objects are same
+        entity_relation.remove({ "object": {"$regex" :merge_into+"$" ,"$options": "-i"},  "subject": {"$regex" :merge_into+"$" ,"$options": "-i"}})
+    url = "/review/"+ merge_into
+    return HttpResponse(json.dumps({"url":url}))

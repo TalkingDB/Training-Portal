@@ -39,8 +39,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bot',
-    'review',
-    'CuisineSelection'
+    'review'
 )
 
 MIDDLEWARE_CLASSES = (

@@ -35,7 +35,7 @@
         <input type="text" class="col-md-6" id="no-tag-entities">
         <button class="pull-right btn btn-primary btn-sm hidden" id="associate-btn">Associate</button>
         <button class="pull-right btn btn-primary btn-sm hidden" id="add_new_entity">Add new Entity</button>
-        <div class="panel panel-default hidden col-md-12">
+        <div class="panel panel-default hidden col-md-12 show-result-entities">
           <div class="panel-body">
           </div>
         </div>
@@ -118,10 +118,28 @@
                <h5 class="text-muted"></h5>
            </div>
             <div class="col-md-12">
-                              {% if concept_type == "entity_url" %}
+                {% if concept_type == "entity_url" %}
+
+
                 <div class="panel panel-info">
               <div class="panel-heading">
-              Didn't find the right name? Enter your own naming suggestion for '{{text}}'
+              <div class="row"><span class="col-md-4">Associace <b>{{ text|removeprefix }}</b> with entiny :</span><span class="col-md-4"> <input type="text" class="form-control col-md-3" id="no-tag-entities"></span>
+                            <span class="col-md-4"><button class="pull-right btn btn-default hidden" id="associate-btn">Associate</button></span></div>
+              </div>
+              <div class="panel-body show-result-entities">
+              <div class="col-md-12">
+
+               </div>
+               </div>
+               </div>
+
+
+
+
+
+                <div class="panel panel-info">
+              <div class="panel-heading">
+              Didn't find the right name? Enter your own naming suggestion for '{{text|removeprefix}}'
               </div>
               <div class="panel-body">
               <div class="col-md-12">
@@ -293,7 +311,12 @@
         }
     });
 }
-{% else %}
+{% endif %}
+        var no_tag = 0;
+        var search_checked = []
+        {% if no_tag %}
+            var no_tag = 1;
+        {% endif %}
         var typingTimer;                //timer identifier
         var doneTypingInterval = 10000;  //time in ms, 4 second
 
@@ -304,7 +327,7 @@
             if($this.val().length > 2){
                 typingTimer = setTimeout(doneTyping($(this)), doneTypingInterval);
             }else{
-                $(".panel-body").append("<p>No results found.</p>");
+                $(".show-result-entities").append("<p>No results found.</p>");
                 $("#associate-btn").addClass("hidden");
                 $("#add_new_entity").addClass("hidden");
             }
@@ -312,7 +335,7 @@
 
         //on keydown, clear the countdown
         $("#no-tag-entities").keydown(function(){
-            $(".panel-body").empty();
+            $(".show-result-entities").empty();
             clearTimeout(typingTimer);
         });
 
@@ -322,7 +345,7 @@
             var panel = $this.siblings(".panel");
             panel.removeClass("hidden");
             $("#add_new_entity").removeClass("hidden");
-            $(".panel-body").empty();
+            $(".show-result-entities").empty();
             $("#associate-btn").addClass("hidden");
             $.ajax({
                   type: "GET",
@@ -330,27 +353,37 @@
             }).success(function(data){
                 if (data.length > 2){
                      $.each(eval(data.replace(/[\r\n]/, "")), function(i, item) {
-                        console.log(item.entity_url);
                         if (item.entity_url.indexOf("DBPedia") >= 0 || item.entity_url.indexOf("SmarterCodes") >= 0){
                             var entity_url = removePrefix(item.entity_url);
                             if(entity_url){
-                                $(".panel-body").append("<label><input type='radio' name='entity' value='"+ item.entity_url +"'> "+ entity_url +" </label></br>");
+                            if (no_tag){
+                                $(".show-result-entities").append("<label><input type='radio' name='entity' value='"+ item.entity_url +"'> "+ entity_url +" </label></br>");
+                            }else{
+                                if (entity_url !="{{text|removeprefix}}"){
+                                $(".show-result-entities").append("<label><input type='checkbox' name='entity' value='"+ item.entity_url +"'> "+ entity_url +" </label></br>");
+                                }
+                            }
+
                             }
                         }
-
                     });
                 }else{
-                    $(".panel-body").empty();
+                    $(".show-result-entities").empty();
                     $("#associate-btn").addClass("hidden");
-                    $(".panel-body").append("<p>No results found. Add new entity with this name ??</p></br><button class='btn btn-primary' id='add_entity'>Add Entity</button>");
+                    if (no_tag){
+                    $(".show-result-entities").append("<p>No results found. Add new entity with this name ??</p></br><button class='btn btn-primary' id='add_entity'>Add Entity</button>");
                     $("#add_new_entity").addClass("hidden");
                     $("#add_entity").on("click", function(){
                         entity = $("#no-tag-entities").val();
                         associateEntity(entity, true);
                     });
+                    }else{
+                    $(".show-result-entities").append("<p>No results found.</p>");
+                    }
                 }
             }).fail(function(){
-                console.log("fail")
+                console.log("fail");
+                $(".show-result-entities").append("<p>Please try again.</p>");
             });
         }
 
@@ -362,16 +395,35 @@
 
         }
 
-        $('.panel-body').on("change", function(){
-            var checked = $('input[type="radio"]:checked', '.panel-body').val();
-            $("#associate-btn").removeClass("hidden");
+        $('.show-result-entities').on("change", function(){
+            if (no_tag){
+                var search_checked = $('input[type="radio"]:checked', '.show-result-entities').val();
+                $("#associate-btn").removeClass("hidden");
+            }else{
+                var search_checked = $('input[type="checkbox"]:checked', '.show-result-entities').val();
+                if (search_checked){
+                    $("#associate-btn").removeClass("hidden");
+                }else{
+                    $("#associate-btn").addClass("hidden");
+                }
+            }
 
         });
+
         $("#associate-btn").on("click", function(){
-            var checked = $('input[type="radio"]:checked', '.panel-body').val();
-
-            associateEntity(checked, false);
+            if (no_tag){
+                var search_checked = $('input[type="radio"]:checked', '.show-result-entities').val();
+                associateEntity(search_checked, false);
+            }else{
+                var search_checked = [];
+                $('input[type="checkbox"]:checked', '.show-result-entities').each(function(){
+                    search_checked.push($(this).val());
+                });
+                MergeEntity(search_checked);
+            }
         });
+
+
         $("#add_new_entity").on("click", function(){
             entity = $("#no-tag-entities").val();
             associateEntity(entity, true);
@@ -392,7 +444,18 @@
             });
         }
 
-        {% endif %}
+        function MergeEntity(entities){
+             $.ajax({
+              type: "POST",
+              url: "/merge-entities/",
+              data: {"to_merge": entities,"merge_into": "{{text}}"},
+            }).success(function(data){
+                var obj = jQuery.parseJSON(data);
+                if (obj.url){
+                    window.location.href = obj.url;
+                  }
+            });
+        }
 });
 </script>
 {% endblock %}
