@@ -43,7 +43,7 @@ def removeprefix(value):
     Remove prefix: DBPedia>Soft_drink will become Soft drink
     """
     if ">" in value:
-        surface_text = (value.split('>')[1]).replace("_", " ").replace("-", " ")
+        surface_text = (value.split('>')[1])
         return surface_text.capitalize()
     return value.capitalize()
 
