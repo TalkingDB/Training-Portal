@@ -39,7 +39,6 @@
               {% if user.is_staff or user.is_superuser %}
                 <li><a href="/progress">Reports</a> </li>
                 <li><a href="/No-Tags">No Tags</a> </li>
-		<li><a href="/cuisine_selection/">Cuisine Selection </a> </li>
               {% endif %}
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{ user.username|capfirst }}&nbsp;<span class="caret"></span></a>
