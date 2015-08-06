@@ -125,17 +125,28 @@ def index(request, resource=None):
 
         progress = get_progress([request.user.id])
 
-        hyponyms = []
-        parents = []
-        meronyms = []
-        meronym_parents = []
+        hyponyms = {}
+        parents = {}
+        meronyms = {}
+        meronym_parents = {}
         if ques[2] == "entity_url":
             print entity_text
-            hyponyms = list(entity_relation.find({"subject": entity_text, "relation": "isHyponymOf"}))
-            parents = list(entity_relation.find({"object": entity_text, "relation": "isHyponymOf"}))
-            meronyms = list(entity_relation.find({"subject": entity_text, "relation": "isMeronymOf"}))
-            meronym_parents = list(entity_relation.find({"object": entity_text, "relation": "isMeronymOf"}))
-            print meronym_parents
+            hyponyms_list = list(entity_relation.find({"subject": entity_text, "relation": "isHyponymOf"}))
+            parents_list = list(entity_relation.find({"object": entity_text, "relation": "isHyponymOf"}))
+            meronyms_list = list(entity_relation.find({"subject": entity_text, "relation": "isMeronymOf"}))
+            meronym_parents_list = list(entity_relation.find({"object": entity_text, "relation": "isMeronymOf"}))
+            for meronym in meronyms_list:
+                meronyms[meronym["object"]] = get_frequency_of_entity(meronym["object"])
+
+            for meronym_parent in meronym_parents_list:
+                meronym_parents[meronym_parent["subject"]] = get_frequency_of_entity(meronym_parent["subject"])
+
+            for parent in parents_list:
+                parents[parent["object"]] = get_frequency_of_entity(parent["object"])
+
+            for hyponym in hyponyms_list:
+                hyponyms[hyponym["subject"]] = get_frequency_of_entity(hyponym["subject"])
+
         return render(request, 'review/index.html', {
                 'entity': entity_text,
                 'text': (' ').join(entity_text.split('_')),
@@ -385,3 +396,37 @@ def merge_entities(request):
         entity_relation.remove({ "object": {"$regex" :merge_into+"$" ,"$options": "-i"},  "subject": {"$regex" :merge_into+"$" ,"$options": "-i"}})
     url = "/review/"+ merge_into
     return HttpResponse(json.dumps({"url":url}))
+
+
+def get_frequency_of_entity(entity):
+    """
+
+    :param entity:
+    :return:
+    """
+    data = entity_collection.aggregate([
+        { "$match":{"intended_trainer":t.projectName+"_trainer",
+            "approved_by_trainer" :{"$exists":"true"},
+            "entity_url": entity
+            }
+         },
+        {
+            "$unwind": "$mentioned_in"
+        },
+        {"$group":
+         {      "_id": "$entity_url",
+                "freq": {
+                    "$sum": 1
+                }
+            }
+        },
+        {"$sort" :{"freq":-1}},
+        {"$limit":1}])
+    if "result" in data:
+        try:
+            result = data["result"][0]
+            if "freq" in result:
+                return result["freq"]
+        except IndexError:
+            return 0
+    return 0

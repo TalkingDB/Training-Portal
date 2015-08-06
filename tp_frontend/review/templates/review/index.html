@@ -140,8 +140,8 @@
                 <div class="col-md-6" style="border-right: 1px dashed grey">
 
                     {% if parents %}
-                        {% for parent in parents %}
-                            <p><a href="/review/{{parent.subject}}">{{ parent.subject|removeprefix}}</a></p>
+                        {% for parent, freq in parents.items %}
+                            <p><a href="/review/{{parent}}">{{ parent|removeprefix}}</a> &nbsp; ({{ freq }})</p>
                         {% endfor %}
                     {% else %}
                         <p>No Result</p>
@@ -151,8 +151,8 @@
                    <div class="col-md-6">
 
                     {% if hyponyms %}
-                        {% for hyponym in hyponyms %}
-                            <p><a href="/review/{{ hyponym.object }}">{{ hyponym.object|removeprefix }}</a></p>
+                        {% for hyponym, freq in hyponyms.items %}
+                            <p><a href="/review/{{ hyponym }}">{{ hyponym|removeprefix }}</a> &nbsp; ({{ freq }})</p>
                         {% endfor %}
                     {% else %}
                         <p>No Result</p>
@@ -169,8 +169,8 @@
               <div class="col-md-12">
                 <div class="col-md-6" style="border-right: 1px dashed grey">
                     {% if meronym_parents %}
-                        {% for meronym_parent in meronym_parents %}
-                            <p><a href="/review/{{meronym_parent.subject}}">{{ meronym_parent.subject|removeprefix}}</a></p>
+                        {% for meronym_parent, freq in meronym_parents.items %}
+                            <p><a href="/review/{{meronym_parent}}">{{ meronym_parent|removeprefix}}</a> &nbsp; ({{ freq }})</p>
                         {% endfor %}
                     {% else %}
                         <p>No Result</p>
@@ -179,8 +179,8 @@
                 </div>
                    <div class="col-md-6">
                     {% if meronyms %}
-                        {% for meronym in meronyms %}
-                            <p><a href="/review/{{ meronym.object }}">{{ meronym.object }}</a></p>
+                        {% for meronym, freq in meronyms.items %}
+                            <p><a href="/review/{{ meronym }}">{{ meronym }}</a> &nbsp; ({{ freq }})</p>
                         {% endfor %}
                     {% else %}
                         <p>No Result</p>
