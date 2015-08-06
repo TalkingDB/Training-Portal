@@ -127,9 +127,15 @@ def index(request, resource=None):
 
         hyponyms = []
         parents = []
+        meronyms = []
+        meronym_parents = []
         if ques[2] == "entity_url":
+            print entity_text
             hyponyms = list(entity_relation.find({"subject": entity_text, "relation": "isHyponymOf"}))
             parents = list(entity_relation.find({"object": entity_text, "relation": "isHyponymOf"}))
+            meronyms = list(entity_relation.find({"subject": entity_text, "relation": "isMeronymOf"}))
+            meronym_parents = list(entity_relation.find({"object": entity_text, "relation": "isMeronymOf"}))
+            print meronym_parents
         return render(request, 'review/index.html', {
                 'entity': entity_text,
                 'text': (' ').join(entity_text.split('_')),
@@ -139,6 +145,8 @@ def index(request, resource=None):
                 'question': ques[0],'skipped_by': list(set(skipped_by)),
                 "hyponyms": hyponyms,
                 "parents": parents,
+                "meronym_parents": meronym_parents,
+                "meronyms" : meronyms,
                 'progress': progress
         })
     else:
@@ -234,8 +242,13 @@ def save(request, entity):
                 'trainers': [request.user.id]
             }
             questionModel.insertQuestion(ques)
+    move_to_next = request.POST.get('move_to_next')
 
-    return redirect('/review')
+    if int(move_to_next):
+        url = "/review"
+    else:
+        url = "/review/"+ entity_url
+    return HttpResponse(json.dumps({"url":url}))
 
 @csrf_exempt
 @login_required()
@@ -289,8 +302,13 @@ def save_surface_text(request, entity):
                 'trainers': [request.user.id]
             }
             questionModel.insertQuestion(ques)
+    move_to_next = request.POST.get('move_to_next')
+    if int(move_to_next):
+        url = "/review"
+    else:
+        url = "/review/"+ surface_text
 
-    return redirect('/review')
+    return HttpResponse(json.dumps({"url":url}))
 
 
 @csrf_exempt
@@ -330,7 +348,7 @@ def delete(request, id):
         entity.is_deleted = True
         entity.save()
         
-    return redirect('/review')
+    return redirect('/review/')
 
 @csrf_exempt
 @login_required

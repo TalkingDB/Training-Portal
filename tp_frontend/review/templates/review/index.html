@@ -43,7 +43,7 @@
 </div>
 {% else %}
 <div class="row">
-<div class="col-md-11">
+<div class="col-md-10">
 {% if concept_type == "entity_url" %}
 <div><span style="font-size:11px;border-radius:0;background-color:#286090;" class="label label-default">CONCEPT</span></div>
 <div style="margin-top:2px;"><span  style="font-size:28px;color: dark-blue">{{text|removeprefix}}</span> <small style="font-size: 16px;"> was found <span style="color: black;">{{ frequency }} </span>times in catalog</small></h2></div>
@@ -54,10 +54,11 @@
 <h5 style="padding-bottom:10px; padding-top:10px; color: #777;">Smarter.Codes thinks of '{{ synonyms|length }} different concepts' when someone talks about {{ text }}. Please help reduce this confusion of Smarter.Codes by choosing 1 concept that it should think when '{{text}}' is being talked about</h5>
 {% endif %}
     </div>
-<div class="col-md-1">
-<div class="pull-right" style="padding-left:0px;">
+<div class="col-md-2">
+<div class="pull-right row" style="padding-left:0px;">
 
-                   <button class="btn btn-primary pull-right save_and_next">Save & Move to next</button>
+                   <button class="btn btn-primary save_and_next" data-move=0>Save</button>
+                   <button class="btn btn-primary pull-right save_and_next" data-move=1>Save & Next</button>
                </br>
                    <button type="button" class="btn btn-link skip_question">Skip This Question</button>
                </div>
@@ -71,7 +72,7 @@
 	           <div class="panel panel-info">
               <div class="panel-heading">
               {% if concept_type == 'entity_url' %}
-                  Suggestions:
+                  Synonyms:
                   {% else %}Prefer to choose 1 answer below. You can choose multiple only if it is very very necessary{% endif %}
               </div>
               <div class="panel-body" style="height:400px; overflow-y:scroll;">
@@ -122,7 +123,7 @@
 
                 <div class="panel panel-info">
               <div class="panel-heading">
-              <div class="row"><span class="col-md-4">Associace <b>{{ text|removeprefix }}</b> with entiny :</span><span class="col-md-4"> <input type="text" class="form-control col-md-3" id="no-tag-entities"></span>
+              <div class="row"><span class="col-md-4">Associate <b>{{ text|removeprefix }}</b> with entity :</span><span class="col-md-4"> <input type="text" class="form-control col-md-3" id="no-tag-entities"></span>
                             <span class="col-md-4"><button class="pull-right btn btn-default hidden" id="associate-btn">Associate</button></span></div>
               </div>
               <div class="panel-body show-result-entities">
@@ -162,6 +163,33 @@
                </div>
                </div>
 
+                <div class="panel panel-info">
+              <div class="panel-heading"><p>Meronyms</p></div>
+              <div class="panel-body">
+              <div class="col-md-12">
+                <div class="col-md-6" style="border-right: 1px dashed grey">
+                    {% if meronym_parents %}
+                        {% for meronym_parent in meronym_parents %}
+                            <p><a href="/review/{{meronym_parent.subject}}">{{ meronym_parent.subject|removeprefix}}</a></p>
+                        {% endfor %}
+                    {% else %}
+                        <p>No Result</p>
+                    {% endif %}
+
+                </div>
+                   <div class="col-md-6">
+                    {% if meronyms %}
+                        {% for meronym in meronyms %}
+                            <p><a href="/review/{{ meronym.object }}">{{ meronym.subject }}</a></p>
+                        {% endfor %}
+                    {% else %}
+                        <p>No Result</p>
+                    {% endif %}
+
+                </div>
+               </div>
+               </div>
+               </div>
 
 
                 <div class="panel panel-info">
@@ -179,10 +207,11 @@
                </div>
                 {% endif %}
             </div>
-           <div class="col-md-12">
+           <div class="col-md-3 col-md-offset-9">
 
-		       <div class="form-group col-md-12 pull-right">
-                   <button class="btn btn-primary pull-right save_and_next">Save & Move to next</button>
+		       <div class="form-group col-md-10 col-md-offset-2 pull-right">
+                   <button class="btn btn-primary save_and_next" data-move=0>Save</button>
+                   <button class="btn btn-primary pull-right save_and_next" data-move=1>Save & Next</button>
                </div>
                <div class="pull-right" style="padding-left:0px;">
                      <!--<p class="text-muted" style="margin-bottom:0;">unsure about suggestions ??</p>-->
@@ -215,6 +244,7 @@
         question = ['{{ question }}',{{ frequency }},'{{ concept_type }}']
         var url = '';
         $(".save_and_next").on("click", function(){
+            var move_to_next = $(this).data("move");
             $('input.synonyms[type=checkbox]').each(function () {
                 (this.checked ? checked.push($(this).val()) : unchecked.push($(this).val()));
             });
@@ -229,9 +259,10 @@
             $.ajax({
               type: "POST",
               url: url,
-              data: {'checked': checked, 'unchecked': unchecked, 'user_defined': user_defined, 'question': question},
-            }).success(function(){
-                window.location.href = "/review";
+              data: {'checked': checked, 'unchecked': unchecked, 'user_defined': user_defined, 'question': question, "move_to_next": move_to_next},
+            }).success(function(data, ev){
+                var obj = jQuery.parseJSON(data);
+                window.location.href = obj.url;
             }).fail(function(){
                 alert("failed");
             });
