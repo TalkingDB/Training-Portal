@@ -142,10 +142,10 @@ def index(request, resource=None):
                 meronym_parents[meronym_parent["subject"]] = get_frequency_of_entity(meronym_parent["subject"])
 
             for parent in parents_list:
-                parents[parent["object"]] = get_frequency_of_entity(parent["object"])
+                parents[parent["subject"]] = get_frequency_of_entity(parent["object"])
 
             for hyponym in hyponyms_list:
-                hyponyms[hyponym["subject"]] = get_frequency_of_entity(hyponym["subject"])
+                hyponyms[hyponym["object"]] = get_frequency_of_entity(hyponym["object"])
 
         return render(request, 'review/index.html', {
                 'entity': entity_text,
