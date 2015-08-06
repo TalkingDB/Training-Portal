@@ -180,7 +180,7 @@
                    <div class="col-md-6">
                     {% if meronyms %}
                         {% for meronym in meronyms %}
-                            <p><a href="/review/{{ meronym.object }}">{{ meronym.subject }}</a></p>
+                            <p><a href="/review/{{ meronym.object }}">{{ meronym.object }}</a></p>
                         {% endfor %}
                     {% else %}
                         <p>No Result</p>
