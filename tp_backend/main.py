@@ -58,7 +58,7 @@ command_meta_data_collection = db['command_meta_data']
 #insert all proper noun into mongodb
 #insert all poper noun into entity_meta_data 
 
-def filter_CommonSense_mongoDumpFromConceptDigger(synonym_collection):
+def remove_surface_text_from_mongoDB_which_were_claimed_by_CommonSenseTraining_mongoDumpFromConceptDigger(synonym_collection):
     # Open file containing data of commonsense linguist and add surface text to a list
     with open("data/mongoDumpOfCommonSenseTraining.txt", "r") as f:
         linguist_data = re.findall('"surface_text"\s:\s"(.*?)"', f.read())
@@ -73,107 +73,111 @@ def dropTables():
     MongoCLI.mongo_collection_drop("noisy_NER", "entity_meta_data")
     MongoCLI.mongo_collection_drop("noisy_NER", "command_meta_data")
     
-def insertVariableIntoMongoDb(variable, entity_part_of_speech):
+def mongoImport_via_String(string_with_json,collection):
     f = open("data/mongoDumpFromConceptDigger.txt", "wb")
-    f.write(variable)
-    """
-    Forward entities, their surface_text to Noisy NER
-    """
+    f.write(string_with_json)
+    f.close()
+
     try:
         import os
-        MongoCLI.mongo_import("noisy_NER", "entity", os.getcwd() + "/data/mongoDumpFromConceptDigger.txt")
+        MongoCLI.mongo_import("noisy_NER", collection , os.getcwd() + "/data/mongoDumpFromConceptDigger.txt")
     except Exception as e:
         print e
         sys.exit()
-    f.close()
-    if entity_part_of_speech:
-        global_id_increment = 0
-        unique_enities_with_noun = synonym_collection.aggregate([
-                                                                {"$group":
-                                                                {"_id": "$entity_url",
-                                                                }
-                                                                }])
-        for entity in unique_enities_with_noun["result"]:
-            entity_url = entity['_id']
-            global_id_increment = global_id_increment + 1      
-            enitity_part_of_speech_entity_url_unique_id_row = {"entity_url":entity_url, "entity_part_of_speech":entity_part_of_speech, "node_id":global_id_increment}
-            entity_meta_data_collection.insert(enitity_part_of_speech_entity_url_unique_id_row)
 
 """
 Read Seed Categories from TP Frontend
 """
 #TODO: Change these lines
 def set_categories_and_make_request_to_concept_digger():
+    t1 = time.time()
+    dropTables()
+    debug_mode = True #saves time while debugging. skips making request to ConceptDigger, rather makes use of local cache
+    
     allCommonNounSeedCategories = '[["Category:Clothing",5,0,1]]'
     allAttributiveSeedCategories = '[["Category:Sizes_in_clothing",5,0,1],["Category:Color", 6,0,1]]'
     allProperNounSeedCategories = '[["Category:Fashion_by_nationality", 4,0,1],["Category:Clothing_companies", 3,0,1]]'
 
-#Seed Dummy Categories for concept Digger 
-#    allCommonNounSeedCategories = '[["Category:Food",1,1,0]]'
-#    allAttributiveSeedCategories = '[["Category:Brand",1,1,0]'
-#    allProperNounSeedCategories = '[["Category:Color", 1,1,0]]'
+#     Seed Dummy Categories for concept Digger 
+#     allCommonNounSeedCategories = '[["Category:Food",1,1,0]]'
+#     allAttributiveSeedCategories = '[["Category:Brand",1,1,0]'
+#     allProperNounSeedCategories = '[["Category:Color", 1,1,0]]'
 
     """
-    Intialize an empty variable mongoDumpFromConceptDigger
-    Get All Entities which belongs to allNounSeedCategories
-    mongoDumpFromConceptDigger= all categories from allNounSeedCategories
-
-    Forward seedCategories to 'Concept Digger & Synonms Finder' component
+    Forward seedCategories to 'Concept Digger (a.k.a Synonms Finder)' component
     """
-    mongoDumpFromConceptDigger = ""
-    dropTables()
-    t1 = time.time()
     #find all common noun entities
-    CommonNounMongoDumpFromConceptDigger = socket_sender.sendPacketOverSocket(config.conceptDiggerHostAddress, config.conceptDiggerPort, allCommonNounSeedCategories)
+    if debug_mode==True:
+        opened_file = open('data/CommonNounMongoDumpFromConceptDigger.json','r')
+        CommonNounMongoDumpFromConceptDigger = opened_file.read()
+        opened_file.close()
+    else:
+        CommonNounMongoDumpFromConceptDigger = socket_sender.sendPacketOverSocket(config.conceptDiggerHostAddress, config.conceptDiggerPort, allCommonNounSeedCategories)
 
-    CommonNounMongoDumpFromConceptDigger = re.sub('}', ',"intended_trainer":"' + TP_Frontend_Backend_Bridge.projectName + '_trainer"}', CommonNounMongoDumpFromConceptDigger)
-    entity_part_of_speech = "common"
-    insertVariableIntoMongoDb(CommonNounMongoDumpFromConceptDigger, entity_part_of_speech) #insert commonnounmongodump
+        opened_file = open('data/CommonNounMongoDumpFromConceptDigger.json','wb')
+        opened_file.write(CommonNounMongoDumpFromConceptDigger)
+        opened_file.close()
+        
+    CommonNounMongoDumpFromConceptDigger = re.sub('}(?:$|\n)', ',"intended_trainer":"' + TP_Frontend_Backend_Bridge.projectName + '_trainer"}\n', CommonNounMongoDumpFromConceptDigger)
+    mongoImport_via_String(CommonNounMongoDumpFromConceptDigger,"entity") #insert commonnounmongodump
+    allCommonNoun = re.findall('"entity_url"\s:\s"(.*?)"', CommonNounMongoDumpFromConceptDigger)
+    uniqueCommonNoun = set(allCommonNoun)
 
-    allAttributiveMongoDumpFromConceptDigger = socket_sender.sendPacketOverSocket(config.conceptDiggerHostAddress, config.conceptDiggerPort, allAttributiveSeedCategories)
-    allAttributiveMongoDumpFromConceptDigger = re.sub('}', ',"intended_trainer":"' + TP_Frontend_Backend_Bridge.projectName + '_trainer"}', allAttributiveMongoDumpFromConceptDigger)
+    # Find Attributve entities
+    if debug_mode==True:
+        opened_file = open('data/allAttributiveMongoDumpFromConceptDigger.json','r')
+        allAttributiveMongoDumpFromConceptDigger = opened_file.read()
+        opened_file.close()
+    else:
+        allAttributiveMongoDumpFromConceptDigger = socket_sender.sendPacketOverSocket(config.conceptDiggerHostAddress, config.conceptDiggerPort, allAttributiveSeedCategories)
+
+        opened_file = open('data/allAttributiveMongoDumpFromConceptDigger.json','wb')
+        opened_file.write(allAttributiveMongoDumpFromConceptDigger)
+        opened_file.close()
+        
+    allAttributiveMongoDumpFromConceptDigger = re.sub('}(?:$|\n)', ',"intended_trainer":"' + TP_Frontend_Backend_Bridge.projectName + '_trainer"}\n', allAttributiveMongoDumpFromConceptDigger)
     allAttributive = re.findall('"entity_url"\s:\s"(.*?)"', allAttributiveMongoDumpFromConceptDigger)
-    #print allAttributive
-    for attributive_entity_url in allAttributive:
-        if ">" in attributive_entity_url:
-            #    if "(" in attributive_surface_text:
-            #            attributive_surface_text = attributive_surface_text.replace("(","")
-            #    if ")" in attributive_surface_text:
-            #            attributive_surface_text = attributive_surface_text.replace(")","")
-            synonym_collection.remove({"entity_url":attributive_entity_url})
-            entity_meta_data_collection.remove({"entity_url":attributive_entity_url})
-        else:
-            print attributive_entity_url
+    uniqueAttributive = set(allAttributive)
+    mongoImport_via_String(allAttributiveMongoDumpFromConceptDigger,"entity") #insert all attributive to mongo
 
+    # Find Proper Noun entities
+    if debug_mode==True:
+        opened_file = open('data/properNounMongoDumpFromConceptDigger.json','r')
+        properNounMongoDumpFromConceptDigger = opened_file.read()
+        opened_file.close()
+    else:
+        properNounMongoDumpFromConceptDigger = socket_sender.sendPacketOverSocket(config.conceptDiggerHostAddress, config.conceptDiggerPort, allProperNounSeedCategories)
 
-    #CommonNounAndAttributiveDump = OnlyCommonNounDump + allAttributiveMongoDumpFromConceptDigger
-    entity_part_of_speech = "attributive"
-    insertVariableIntoMongoDb(allAttributiveMongoDumpFromConceptDigger, entity_part_of_speech) #insert all attributive to mongo
+        opened_file = open('data/properNounMongoDumpFromConceptDigger.json','wb')
+        opened_file.write(properNounMongoDumpFromConceptDigger)
+        opened_file.close()
 
-
-    properNounMongoDumpFromConceptDigger = socket_sender.sendPacketOverSocket(config.conceptDiggerHostAddress, config.conceptDiggerPort, allProperNounSeedCategories)
-    properNounMongoDumpFromConceptDigger = re.sub('}', ',"intended_trainer":"' + TP_Frontend_Backend_Bridge.projectName + '_trainer"}', properNounMongoDumpFromConceptDigger)
-
+    properNounMongoDumpFromConceptDigger = re.sub('}(?:$|\n)', ',"intended_trainer":"' + TP_Frontend_Backend_Bridge.projectName + '_trainer"}\n', properNounMongoDumpFromConceptDigger)
+    
     allProperNoun = re.findall('"entity_url"\s:\s"(.*?)"', properNounMongoDumpFromConceptDigger)
+    uniqueProperNoun = set(allProperNoun)
+    mongoImport_via_String(properNounMongoDumpFromConceptDigger,"entity") #insert all ProperNoun to mongo
 
-    for properNoun_entity_url in allProperNoun:
-        if ">" in properNoun_entity_url:
-            #        if "(" in properNoun_text:
-            #            properNoun_text = properNoun_text.replace("(", "")
-            #        if ")" in properNoun_text:
-            #            properNoun_text = properNoun_text.replace(")", "")
-            synonym_collection.remove({"entity_url":properNoun_entity_url})
-            entity_meta_data_collection.remove({"entity_url":attributive_entity_url})
-        else:
-            print properNoun_entity_url
+    remove_surface_text_from_mongoDB_which_were_claimed_by_CommonSenseTraining_mongoDumpFromConceptDigger(synonym_collection)
 
-    #commonNounAndAllAttributiveAndAllProperNoun = OnlyCommonNounAndAttributiveDump + properNounMongoDumpFromConceptDigger
-    entity_part_of_speech = "proper"
-    insertVariableIntoMongoDb(properNounMongoDumpFromConceptDigger, entity_part_of_speech) #insert all attributive to mongo
-
-    mongoDumpFromConceptDigger = filter_CommonSense_mongoDumpFromConceptDigger(synonym_collection)
-    #this mongoDump must be written in a hardisk file, so that command line utility of mongodb can be used to automatically import this data into mongo database
-
+    #write common noun, attributive, proper noun in entity_meta_data.
+    # But common noun, with attributive, then overwrite it with proper noun
+    dict_entity_meta_data= {}
+    for entity_url in uniqueCommonNoun:
+        dict_entity_meta_data[entity_url] = 'common'
+        
+    for entity_url in uniqueAttributive:
+        dict_entity_meta_data[entity_url] = 'attributive'
+    
+    for entity_url in uniqueProperNoun:
+        dict_entity_meta_data[entity_url] = 'proper'
+        
+    mongodb_json_buffer = ''
+    for entity_url in dict_entity_meta_data:
+        if entity_url.find('>') > 0:
+            mongodb_json_buffer = mongodb_json_buffer + '{"entity_url":"' + entity_url + '", "entity_part_of_speech":"' + dict_entity_meta_data[entity_url] + '"}\n'
+    mongoImport_via_String(mongodb_json_buffer,"entity_meta_data")
+    
     t2 = time.time()
     print "concept digger & file writing took " + str(t2-t1) + " seconds"
     t1 = time.time()
@@ -184,7 +188,7 @@ def insert_commonsense_training_data():
     Later this data might also be sourced from Concept Digger component
     """
     with open("data/mongoDumpOfCommonSenseTraining.txt", "r") as p:
-        insertVariableIntoMongoDb(p.read(), 0)
+        mongoImport_via_String(p.read(),"entity")
     p.close()
 
 
@@ -205,7 +209,7 @@ def set_intented_trainer_of_no_tag_project():
 def insertEntity_to_command_and_command_meta_data():
 #   This function loads txt files from data folder then insert it directly into mongodb
 #   folder. 
-    MongoCLI.mongo_import("noisy_NER", "Entity_to_Command", os.getcwd() + "/data/Entity_to_Command.txt")
+    MongoCLI.mongo_import("noisy_NER", "Entity_to_Command", os.getcwd() + "/data/Entity_to_Command.json")
     MongoCLI.mongo_import("noisy_NER", "command_meta_data", os.getcwd() + "/data/command_meta_data.txt")
 #   Get All Unique Entities from entity collection then insert into Entity_to_command
     unique_enities_with_noun = synonym_collection.aggregate([

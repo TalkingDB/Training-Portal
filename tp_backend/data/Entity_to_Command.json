@@ -20030,4 +20030,3 @@
 {"_id":{"$oid":"550bf6d70640fd3afc065f71"},"command":"CommandNet\u003eUnitOfMeasurement","entity_url":"DBPedia\u003e10000_(number)","how_this_record":"CommandNetTraining"}
 {"_id":{"$oid":"551561ccb41c03f9849677a1"},"command":"CommandNet\u003eRemoveX","entity_url":"Wikitionary\u003eRemove","how_this_record":"CommandNetTraining"}
 {"_id":{"$oid":"551aa134b18ea3f36e4e008d"},"command":"CommandNet\u003eVagueSizeOf","entity_url":"Foodweasel\u003eParty_order","how_this_record":"CommandNetTraining"}
-{"_id":{"$oid":"5586b34d562f648bc574ad78"},"command":"CommandNet\u003eFind","entity_url":"Wikitionary\u003eFIND","how_this_record":"CommandNetTraining"}
