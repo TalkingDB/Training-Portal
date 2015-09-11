@@ -25,7 +25,7 @@ client = MongoClient(mongoUrl, mongoPort)
 db = client[mongoDb]
 entityModel = db['entity']
 entityModel.ensure_index('frequency')
-
+entity_to_command = db['Entity_to_Command']
 @login_required
 def display_no_tag(request):
     """
@@ -92,8 +92,12 @@ def associate_entity(request):
         }})
         url = "/review/"+ entity
         messages.success(request,'Keyword '+ str(surface_text)+ ' associated with ' + str(entity))
-    except:
+        if new:
+            entity_to_command.insert({"entity_url" : entity,"command" : "CommandNet>Noun"})
+
+    except Exception as e:
         url = "reload"
+        print e
         messages.error(request,"Error in associating no tag with entity. Please Try again")
 
     return HttpResponse(json.dumps({"url":url}))
